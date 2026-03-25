@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hands-on Labs — GitHub Copilot for Developers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { rabo: { 50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4d4d8' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .tab-btn.active {
+            background-color: #6366f1;
+            color: #fff;
+            border-color: #6366f1;
+        }
+
+        .track-panel {
+            display: none;
+        }
+
+        .track-panel.active {
+            display: block;
+        }
+
+        .lab-body {
+            display: none;
+        }
+
+        .lab-body.open {
+            display: block;
+        }
+
+        .step-body {
+            display: none;
+        }
+
+        .step-body.open {
+            display: block;
+        }
+
+        .chevron {
+            transition: transform .2s;
+        }
+
+        .chevron.open {
+            transform: rotate(180deg);
+        }
+
+        pre code {
+            font-size: .8125rem;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            opacity: 0;
+            transition: opacity .15s;
+        }
+
+        pre:hover .copy-btn,
+        .copy-btn:focus {
+            opacity: 1;
+        }
+
+        .progress-ring {
+            transition: stroke-dashoffset .35s ease;
+        }
+
+        .step-check:checked+label .step-circle {
+            background-color: #22c55e;
+            border-color: #22c55e;
+            color: #fff;
+        }
+
+        .step-check:checked+label .step-text {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800 antialiased">
+
+    <div class="min-h-screen flex flex-col items-center px-4 py-10">
+        <main class="max-w-4xl w-full mx-auto space-y-8">
+
+            <!-- ── HERO ─────────────────────────────────────────────── -->
+            <header class="bg-white rounded-xl shadow-2xl p-8 sm:p-10 text-center space-y-3">
+                <div
+                    class="inline-flex items-center gap-2 rounded-full border border-rabo-200 bg-rabo-50 px-4 py-2 text-sm font-semibold text-rabo-700">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+                    </svg>
+                    <span id="heroBadge">Rabobank — Hands-on Labs</span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">GitHub Copilot — Hands-on Labs</h1>
+                <p id="labsWelcome" class="text-gray-500 text-base max-w-xl mx-auto">Practical exercises tailored to Rabobank front-end
+                    and back-end development. Work through real-world scenarios in your own IDE.</p>
+                <div id="userBanner" class="hidden mx-auto max-w-md rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-800">
+                    Welcome back, <strong id="userNameDisplay"></strong>
+                    <span id="userTrackDisplay" class="ml-1"></span>
+                </div>
+                <div id="registerBanner" class="hidden mx-auto max-w-md rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    &#x26A0;&#xFE0F; You haven't registered yet.
+                    <a href="index-rabobank.html" class="font-semibold text-amber-900 underline hover:text-amber-700">Register on the main page</a> first so your progress is linked to your name.
+                </div>
+                <div class="flex items-center justify-center gap-6 pt-2">
+                    <div class="text-center">
+                        <p id="progressCount" class="text-2xl font-bold text-indigo-600">0 / 0</p>
+                        <p class="text-xs text-gray-400">Steps completed</p>
+                    </div>
+                    <svg id="progressRing" class="w-16 h-16 -rotate-90" viewBox="0 0 64 64">
+                        <circle cx="32" cy="32" r="28" fill="none" stroke="#e5e7eb" stroke-width="5" />
+                        <circle id="progressCircle" class="progress-ring" cx="32" cy="32" r="28" fill="none"
+                            stroke="#6366f1" stroke-width="5" stroke-linecap="round" stroke-dasharray="175.93"
+                            stroke-dashoffset="175.93" />
+                    </svg>
+                </div>
+            </header>
+
+            <!-- ── HOW IT WORKS ─────────────────────────────────────── -->
+            <section class="bg-white rounded-xl shadow-md px-6 py-5">
+                <h2 class="font-semibold text-gray-800 mb-3">&#x1F6E0;&#xFE0F; How these labs work</h2>
+                <div class="grid sm:grid-cols-3 gap-4 text-sm text-gray-600">
+                    <div class="flex gap-3 items-start">
+                        <span
+                            class="flex-shrink-0 w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center">1</span>
+                        <p>Pick your track below — <strong>Front-end</strong> or <strong>Back-end</strong>.</p>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <span
+                            class="flex-shrink-0 w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center">2</span>
+                        <p>Expand a lab, read the scenario, and follow the steps in your IDE.</p>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <span
+                            class="flex-shrink-0 w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center">3</span>
+                        <p>Check off each step as you complete it. Your progress is saved locally.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── STARTER PROJECT ─────────────────────────────────── -->
+            <section class="bg-white rounded-xl shadow-md px-6 py-5">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="font-semibold text-gray-800 mb-1">&#x1F680; Starter project — Customer Case Summary</h2>
+                        <p class="text-sm text-gray-600 max-w-2xl">
+                            A banking tool for managing customer cases (complaints, fraud reports, loan requests).
+                            Contains an <strong>HTML/CSS/JavaScript</strong> frontend and a <strong>Java/Spring Boot</strong> backend.
+                            Open it in VS Code, create a new branch, and let Copilot help you complete the labs.
+                        </p>
+                        <p class="text-xs text-gray-400 mt-2">
+                            Tip: Keep related project files open in your editor — Copilot uses open files as context for better suggestions.
+                        </p>
+                    </div>
+                    <div class="flex gap-3 flex-wrap">
+                        <a id="starterRepoLink" href="#" target="_blank" rel="noopener noreferrer"
+                            class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-indigo-300 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 transition">
+                            Open repo
+                        </a>
+                        <a id="starterDownloadLink" href="#" target="_blank" rel="noopener noreferrer"
+                            class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700 transition">
+                            Download starter project
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── TRACK TABS ───────────────────────────────────────── -->
+            <section class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="px-6 pt-6 pb-2">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">&#x1F9EA; Lab Exercises</h2>
+                    <div class="flex gap-3 flex-wrap">
+                        <button id="tab-frontend" type="button" onclick="switchTrack('frontend')"
+                            class="tab-btn active px-5 py-2 rounded-full border border-indigo-300 text-sm font-semibold transition">
+                            &#x1F5A5;&#xFE0F; Front-end Labs
+                        </button>
+                        <button id="tab-backend" type="button" onclick="switchTrack('backend')"
+                            class="tab-btn px-5 py-2 rounded-full border border-gray-300 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition">
+                            &#x2699;&#xFE0F; Back-end Labs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ════════════════════════════════════════════════════════
+           FRONT-END LABS
+           ════════════════════════════════════════════════════════ -->
+                <div id="track-frontend" class="track-panel active px-6 py-6 space-y-5">
+
+                    <!-- FE Lab 1 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="fe1">
+                        <button type="button" onclick="toggleLab('fe1')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 text-sm font-bold flex items-center justify-center">L1</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">UI Component Generation &amp; Styling</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 1 &middot; &#x23F1; ~30 min &middot;
+                                        VS Code + HTML/CSS/JS</p>
+                                </div>
+                            </div>
+                            <svg id="fe1-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="fe1-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-3 text-sm text-indigo-800">
+                                <strong>Scenario:</strong> The Rabobank design system team asks you to build a reusable
+                                Notification Banner UI component using plain HTML, CSS, and JavaScript. Use Copilot to scaffold the files, then verify it matches the design-system rules.
+                            </div>
+
+                            <!-- Steps -->
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe1-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe1-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">1</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Open your Rabobank
+                                                front-end project in VS Code. Create three new files:
+                                                <code>notification-banner.html</code>, <code>notification-banner.css</code>, and <code>notification-banner.js</code>.
+                                            </p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe1-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe1-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">2</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">In the HTML file, write a descriptive
+                                                comment and let Copilot generate the component markup:
+                                            </p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code>&lt;!-- Rabobank Notification Banner component
+     Variants: info, warning, error, success
+     Uses Rabobank design tokens (CSS custom properties)
+     Follows accessibility guidelines (ARIA roles)
+     Renders an icon based on variant, supports dismiss button --&gt;
+
+&lt;div class="notification-banner" data-variant="info" role="alert" aria-live="polite"&gt;</code></pre>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe1-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe1-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">3</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Review the generated
+                                                code. Ask Copilot Chat: <em>"Does this component follow Rabobank's
+                                                    accessibility standards? Add aria-live and role attributes to the HTML."</em>
+                                            </p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe1-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe1-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">4</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">In the CSS file, ask Copilot to
+                                                generate styles using CSS custom properties (variables) for the Rabobank color palette. Ask: <em>"Generate CSS for all four banner variants using custom properties for colors."</em></p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe1-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe1-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">5</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Use <strong>Inline
+                                                    Chat</strong> (<code>Ctrl+I</code>) inside the JS file to add
+                                                functionality. Type: <em>"Add an auto-dismiss timer that hides the banner
+                                                    after 5 seconds for info and success variants. Use vanilla JS with querySelector and classList."</em> Review the
+                                                generated code before accepting.</p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe1-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe1-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">6</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Practice
+                                                <strong>Ghost Text acceptance</strong>: Start typing a new variant
+                                                mapping object in the JS file. Accept suggestions word-by-word (<code>Ctrl+→</code>)
+                                                instead of the full line (<code>Tab</code>) to stay in control of what's
+                                                generated.
+                                            </p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe1-s7" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe1-s7" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">7</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">
+                                                <strong>Reflect:</strong> What did Copilot get right? What did you have
+                                                to adjust to match Rabobank conventions? Did inline chat or
+                                                autocompletion give better results?
+                                            </p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div
+                                class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                                <strong>&#x1F4A1; Tip:</strong> Open a relevant existing HTML/CSS file in a side tab —
+                                Copilot uses open files as context for consistent style. The more examples of your
+                                design system Copilot can see, the better it aligns with Rabobank conventions.
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- FE Lab 2 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="fe2">
+                        <button type="button" onclick="toggleLab('fe2')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 text-sm font-bold flex items-center justify-center">L2</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Refactoring &amp; Code Modernization</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 1 &middot; &#x23F1; ~25 min &middot;
+                                        VS Code + HTML/CSS/JS</p>
+                                </div>
+                            </div>
+                            <svg id="fe2-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="fe2-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-3 text-sm text-indigo-800">
+                                <strong>Scenario:</strong> A legacy Rabobank internal page uses inline styles and
+                                outdated JavaScript patterns. Your team is migrating to clean external CSS and modern
+                                vanilla JS. Use Copilot to accelerate the refactoring.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe2-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe2-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">1</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Create a file
+                                                <code>legacy-account-card.html</code> with the following inline-styled HTML:
+                                            </p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code>&lt;!-- Legacy Rabobank Account Card — uses inline styles, no separation of concerns --&gt;
+&lt;div style="border: 1px solid #ccc; padding: 16px; border-radius: 8px;"&gt;
+  &lt;h3 style="color: #FF6600; font-size: 18px;"&gt;Jan de Vries&lt;/h3&gt;
+  &lt;p style="color: #666;"&gt;NL91 RABO 0315 2345 67&lt;/p&gt;
+  &lt;button onclick="toggleBalance()" style="background: #FF6600; color: white;
+    padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;"&gt;
+    Show Balance
+  &lt;/button&gt;
+  &lt;p id="balance" style="font-size: 24px; font-weight: bold; margin-top: 8px; display: none;"&gt;
+    &amp;euro;12,450.00
+  &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  var isExpanded = false;
+  function toggleBalance() {
+    isExpanded = !isExpanded;
+    var el = document.getElementById('balance');
+    el.style.display = isExpanded ? 'block' : 'none';
+    event.target.textContent = isExpanded ? 'Hide Balance' : 'Show Balance';
+  }
+&lt;/script&gt;</code></pre>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe2-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe2-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Select the code
+                                            and ask Copilot Chat: <em>"Refactor this HTML to use external CSS classes
+                                                instead of inline styles. Use CSS custom properties for colors. Move the
+                                                JavaScript to a separate file using addEventListener instead of inline
+                                                onclick. Use the Rabobank orange (#FF6600) as the accent color."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe2-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe2-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">3</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Compare old vs. new side
+                                            by side. Check for lost functionality or style
+                                            differences. Does the new version still correctly toggle balance visibility?
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe2-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe2-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Use <strong>Inline
+                                                Chat</strong> (<code>Ctrl+I</code>) to further improve the code:
+                                            <em>"Improve readability: extract the balance display into a reusable
+                                                function and add descriptive variable names."</em>
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe2-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe2-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot to make the card
+                                            <strong>reusable</strong>: <em>"Refactor this into a reusable
+                                                createAccountCard(holder, accountNumber, balance) function that can
+                                                render multiple cards on the page with independent toggle behavior."</em>
+                                            Compare the single-card vs. reusable version.</p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe2-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe2-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">
+                                            <strong>Reflect:</strong> Ask Copilot:
+                                            <em>"Generate a migration checklist for converting inline-styled legacy HTML
+                                                pages to clean CSS with modern JavaScript."</em> Save this for your team
+                                            wiki.
+                                        </p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                                <strong>&#x1F4A1; Tip:</strong> Copilot excels at refactoring patterns. You
+                                can use it to migrate inline styles to CSS classes, convert old-style JS to modern
+                                ES6+, or restructure HTML for better semantics. Always verify the output — subtle
+                                differences can introduce visual or behavioral bugs.
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- FE Lab 3 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="fe3">
+                        <button type="button" onclick="toggleLab('fe3')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 text-sm font-bold flex items-center justify-center">L3</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Code Review &amp; Documentation with Copilot
+                                    </p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 2 &middot; &#x23F1; ~25 min &middot;
+                                        VS Code</p>
+                                </div>
+                            </div>
+                            <svg id="fe3-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="fe3-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-3 text-sm text-indigo-800">
+                                <strong>Scenario:</strong> A collega heeft een pull request ingediend met de nieuwe
+                                case-detailmodule van het Rabobank klantzaakbeheer-systeem
+                                (<code>case-detail.js</code>, <code>case-card.js</code>, <code>formatters.js</code>).
+                                Gebruik Copilot om een self-review te doen, documentatie te genereren en
+                                onboardingmateriaal klaar te zetten vóór de teamreview.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe3-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe3-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">1</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Open
+                                            <code>js/components/case-detail.js</code> in VS Code. Selecteer alle code
+                                            en vraag Copilot: <em>"Review this code for bugs, edge cases, and
+                                                accessibility issues."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe3-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe3-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Gebruik de
+                                            <code>/explain</code> slash command in Copilot Chat voor een gedetailleerde
+                                            uitleg van de renderlogica. Vraag: <em>"/explain How does renderCaseDetail
+                                                build the DOM and how do the callbacks onStatusChange and onAddNote
+                                                work?"</em>
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe3-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe3-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">3</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Open
+                                            <code>js/utils/formatters.js</code> naast <code>case-detail.js</code>.
+                                            Vraag Copilot om JSDoc te genereren voor elke geëxporteerde functie: <em>"/doc
+                                                Generate comprehensive JSDoc comments with parameter descriptions,
+                                                return values, and edge cases for every exported function in this
+                                                file."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe3-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe3-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Gebruik
+                                            <code>@workspace</code> om een project-level README aan te laten maken.
+                                            Vraag Copilot: <em>"@workspace Generate a README.md for this front-end
+                                                module. Include: purpose, architecture overview, key components, setup
+                                                instructions, and contribution guidelines for Rabobank
+                                                developers."</em>
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe3-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe3-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Vraag Copilot:
+                                            <em>"Write an onboarding summary for a new Rabobank developer who needs to
+                                                understand the case management frontend. Include a component dependency
+                                                diagram using Mermaid syntax showing how case-list, case-card,
+                                                case-detail, formatters and the API service relate to each
+                                                other."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe3-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe3-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Reflect:</strong>
+                                            Heeft Copilot iets gevonden dat jij zelf gemist had? Was de gegenereerde
+                                            documentatie accuraat? Wat moest je corrigeren om het te laten kloppen met
+                                            de Rabobank-codestandaarden?</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                                <strong>&#x1F4A1; Tip:</strong> Houd <code>case-detail.js</code>,
+                                <code>case-card.js</code> en <code>formatters.js</code> tegelijk open — Copilot
+                                gebruikt alle open bestanden als context. Gebruik <code>/explain</code> om code te
+                                begrijpen, <code>/doc</code> voor documentatie en <code>@workspace</code> voor
+                                projectbrede vragen.
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- FE Lab 4 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="fe4">
+                        <button type="button" onclick="toggleLab('fe4')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 text-sm font-bold flex items-center justify-center">L4</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">XSS Detection &amp; Secure UI Logic
+                                    </p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 3 &middot; &#x23F1; ~20 min &middot;
+                                        VS Code</p>
+                                </div>
+                            </div>
+                            <svg id="fe4-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="fe4-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-3 text-sm text-indigo-800">
+                                <strong>Scenario:</strong> Copilot gegenereerde code voor het admin-zoekpaneel in
+                                <code>js/components/admin.js</code> bevat een XSS-kwetsbaarheid: gebruikersinput wordt
+                                direct via <code>innerHTML</code> in de DOM gezet. Zoekresultaten tonen daardoor
+                                klantnamen en zaaknummers ongesanitized. Identificeer de kwetsbaarheid, fix hem en leer
+                                hoe je Copilot-generated code kritisch beoordeelt in een bancaire context.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe4-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe4-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">1</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Open
+                                                <code>js/components/admin.js</code>. Zoek de twee
+                                                <code>innerHTML</code>-regels die gebruikersinput renderen. Probeer de
+                                                XSS zelf te triggeren door in het zoekveld te typen:</p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code>// &#x26A0;&#xFE0F; XSS-kwetsbaarheid — user input wordt als HTML gerenderd!
+
+// preview van de zoekopdracht:
+preview.innerHTML = 'Zoeken naar: &lt;strong&gt;' + query + '&lt;/strong&gt;';
+
+// zoekresultaten:
+li.innerHTML = '&lt;strong&gt;' + c.customerName + '&lt;/strong&gt; – ' + c.subject;
+
+// Test: typ dit in het zoekveld om de bug te triggeren:
+// &lt;img src=x onerror="alert('XSS!')"&gt;</code></pre>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe4-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe4-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Selecteer de kwetsbare
+                                            regels en vraag Copilot: <em>"Is this code safe for a banking application?
+                                                List all XSS vulnerabilities and explain why each is
+                                                dangerous."</em> Vergelijk Copilots analyse met je eigen
+                                            bevindingen.</p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe4-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe4-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">3</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Analyseer de
+                                            kwetsbaarheid. Noteer: (1) waarom <code>innerHTML</code> met
+                                            gebruikersinput gevaarlijk is, (2) welke aanvalsvectoren mogelijk zijn in
+                                            een banking-dashboard (bijv. stored XSS via klantnamen in de database),
+                                            (3) wat de impact is als een klant kwaadaardige HTML in een zaaknaam
+                                            opslaat.</p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe4-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe4-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Vraag Copilot de code te
+                                            herschrijven: <em>"Fix the XSS vulnerability in this admin component.
+                                                Replace all innerHTML assignments that use user data with safe DOM API
+                                                alternatives (textContent, createElement). If innerHTML is needed for
+                                                static markup only, add a comment explaining why it is safe. Follow
+                                                Rabobank security standards."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe4-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe4-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Vraag Copilot om de
+                                            gefixte versie te reviewen op aanvullende problemen: <em>"Review this fixed
+                                                version for remaining security issues: are there any other places where
+                                                user data could be injected? Is the IBAN or BSN of customers exposed in
+                                                the search results? Does the component follow the Rabobank data masking
+                                                standards?"</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe4-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe4-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Reflect:</strong>
+                                            Formuleer één teamregel: <em>"Gebruik nooit <code>innerHTML</code> met
+                                                gebruikersinput — gebruik altijd <code>textContent</code> of de DOM
+                                                API."</em> Maak een korte security-checklist voor front-end PR-reviews
+                                            bij Rabobank.</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="rounded-lg bg-red-50 border border-red-200 px-4 py-2 text-sm text-red-800">
+                                <strong>&#x26A0;&#xFE0F; Key lesson:</strong> Copilot begrijpt jouw
+                                beveiligingscontext niet. Gegenereerde code die gebruikersinput in de DOM plaatst moet
+                                altijd worden beoordeeld op XSS-risico. In een bancaire omgeving is élke
+                                gebruikersinput potentieel kwaadaardig — gebruik nooit <code>innerHTML</code> met
+                                ongesanitized data.
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- FE Lab 5 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="fe5">
+                        <button type="button" onclick="toggleLab('fe5')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 text-sm font-bold flex items-center justify-center">L5</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Unit Testing &amp; Function Testing with
+                                        Copilot</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 3 &middot; &#x23F1; ~35 min &middot;
+                                        VS Code + JavaScript</p>
+                                </div>
+                            </div>
+                            <svg id="fe5-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="fe5-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-3 text-sm text-indigo-800">
+                                <strong>Scenario:</strong> Your team is building a mortgage calculator for the
+                                Rabobank customer portal. You need comprehensive test coverage before release. Use
+                                Copilot to generate and improve tests for plain JavaScript functions.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe5-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe5-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">1</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Create a
+                                                <code>mortgage-calculator.js</code> file with this utility
+                                                function:
+                                            </p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code>/**
+ * Calculate monthly mortgage payment.
+ * @param {number} principal  - Loan amount in euros
+ * @param {number} annualRate - Annual interest rate (e.g. 3.5)
+ * @param {number} years      - Loan term in years
+ * @returns {number} Monthly payment amount
+ */
+function calculateMonthlyPayment(principal, annualRate, years) {
+  var monthlyRate = annualRate / 100 / 12;
+  var numPayments = years * 12;
+  if (monthlyRate === 0) return principal / numPayments;
+  return principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))
+    / (Math.pow(1 + monthlyRate, numPayments) - 1);
+}</code></pre>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe5-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe5-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Create a test file
+                                            <code>mortgage-calculator.test.js</code>. Write a describe block and let
+                                            Copilot generate the first test via Ghost Text autocompletion. Accept with
+                                            <code>Tab</code>.
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe5-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe5-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">3</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Use the
+                                            <code>/tests</code> slash command: <em>"/tests Generate comprehensive tests
+                                                including edge cases: zero interest rate, very large loan amounts
+                                                (&#x20AC;10M+), negative values, zero principal, 0 years term."</em>
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe5-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe5-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot to test
+                                            specific banking conditions: <em>"Add tests for: (1) Dutch mortgage tax
+                                                deduction (hypotheekrenteaftrek), (2) maximum Rabobank LTV ratio of
+                                                100%, (3) negative amortization scenarios."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe5-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe5-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Now test the UI
+                                            integration: Ask Copilot to generate tests that verify the HTML form — user
+                                            input via <code>document.getElementById</code>, submit handling, result
+                                            display in the DOM, and validation error messages.</p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe5-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe5-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Run the tests. For any
+                                            failures, select the error output and ask Copilot Chat: <em>"This test is
+                                                failing. Fix it and explain what was wrong."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe5-s7" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe5-s7" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">7</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Reflect:</strong>
+                                            Were the generated edge case tests meaningful for a banking context? Did
+                                            Copilot miss any domain-specific test scenarios that a Rabobank developer
+                                            would know to test?</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                                <strong>&#x1F4A1; Tip:</strong> Copilot generates better tests when the function under
+                                test is well-named and documented. Keep your source file and test file open side by side —
+                                Copilot uses both as context. Use <code>/tests</code> for quick generation, then refine
+                                with specific prompts for edge cases.
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- FE Lab 6 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="fe6">
+                        <button type="button" onclick="toggleLab('fe6')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 text-sm font-bold flex items-center justify-center">L6</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Performance Optimization &amp; Code Quality
+                                    </p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 3 &middot; &#x23F1; ~30 min &middot;
+                                        VS Code + Browser DevTools</p>
+                                </div>
+                            </div>
+                            <svg id="fe6-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="fe6-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-3 text-sm text-indigo-800">
+                                <strong>Scenario:</strong> The Rabobank customer account dashboard loads slowly because
+                                of inefficient DOM manipulation and data handling in plain JavaScript. Use Copilot to identify performance
+                                issues and improve code quality.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe6-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe6-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">1</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Review this
+                                                inefficient code and ask Copilot to find performance issues:</p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code>// &#x26A0;&#xFE0F; Performance: rebuilds the entire list on every keystroke
+var filterInput = document.getElementById('filter');
+var listContainer = document.getElementById('account-list');
+
+filterInput.addEventListener('keyup', function () {
+  var filter = filterInput.value.toLowerCase();
+  listContainer.innerHTML = '';                       // clears DOM every time
+
+  for (var i = 0; i &lt; accounts.length; i++) {
+    if (accounts[i].name.toLowerCase().indexOf(filter) !== -1) {
+      var card = document.createElement('div');
+      card.className = 'account-card';
+      card.innerHTML = '&lt;h3&gt;' + accounts[i].name + '&lt;/h3&gt;'
+        + '&lt;p&gt;' + accounts[i].accountNumber + '&lt;/p&gt;'
+        + '&lt;p class="balance"&gt;&amp;euro;' + accounts[i].balance.toFixed(2) + '&lt;/p&gt;';
+      card.onclick = function () { console.log(accounts[i]); };   // closure bug
+      listContainer.appendChild(card);
+    }
+  }
+
+  // recalculates total every time
+  var total = 0;
+  var allCards = document.querySelectorAll('.account-card .balance');
+  for (var j = 0; j &lt; allCards.length; j++) {
+    total += parseFloat(allCards[j].textContent.replace('€', ''));
+  }
+  document.getElementById('total').textContent = '€' + total.toFixed(2);
+});</code></pre>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe6-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe6-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot:
+                                            <em>"Identify all performance issues in this code and fix them. Use
+                                                DocumentFragment for batch DOM updates, cache selectors, fix the
+                                                closure bug, and calculate the total from the data array instead of
+                                                re-querying the DOM. Explain each optimization."</em>
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe6-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe6-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">3</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Use Inline Chat to
+                                            improve readability: <em>"Improve code readability: add descriptive variable
+                                                names, extract magic values into named constants, and use modern ES6
+                                                syntax (const, let, arrow functions, template literals)."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe6-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe6-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot to improve
+                                            reliability: <em>"Add error handling for missing DOM elements, empty account
+                                                lists, and show a user-friendly 'no results' message. A Rabobank customer
+                                                should never see a blank screen."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe6-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe6-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot to add
+                                            debounced search: <em>"The filter input triggers DOM rebuilds on every
+                                                keystroke. Add a debounce mechanism to reduce unnecessary re-renders when
+                                                searching across 50,000+ accounts."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="fe6-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="fe6-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-indigo-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Reflect:</strong>
+                                            Compare the original and optimized versions. Which optimizations had the
+                                            biggest impact? Did Copilot suggest any optimizations that were unnecessary
+                                            or premature?</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                                <strong>&#x1F4A1; Tip:</strong> When asking Copilot to optimize, be specific about the
+                                constraint: number of records, response time targets, or bundle size limits. Generic
+                                "make it faster" prompts give generic answers. Rabobank-scale data (millions of
+                                accounts) needs different optimizations than a small app.
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- ════════════════════════════════════════════════════════
+           BACK-END LABS
+           ════════════════════════════════════════════════════════ -->
+                <div id="track-backend" class="track-panel px-6 py-6 space-y-5">
+
+                    <!-- BE Lab 1 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="be1">
+                        <button type="button" onclick="toggleLab('be1')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-violet-100 text-violet-700 text-sm font-bold flex items-center justify-center">L1</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">API Endpoint &amp; Service Logic with Copilot
+                                    </p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 1 &middot; &#x23F1; ~30 min &middot;
+                                        IntelliJ / VS Code + Java/Kotlin</p>
+                                </div>
+                            </div>
+                            <svg id="be1-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="be1-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-violet-50 border border-violet-200 rounded-lg px-4 py-3 text-sm text-violet-800">
+                                <strong>Scenario:</strong> You need to build a REST endpoint for an internal Rabobank
+                                service that retrieves customer notification preferences. Use Copilot to scaffold the
+                                controller, service, and DTO layers following Rabobank coding standards.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be1-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be1-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">1</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Create a new file
+                                                <code>NotificationPreferenceController.java</code>. Write a comment
+                                                describing the endpoint:
+                                            </p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code>/**
+ * REST controller for customer notification preferences.
+ * GET /api/v1/customers/{customerId}/notification-preferences
+ * Returns NotificationPreferenceDTO.
+ * Follows Rabobank API naming conventions and uses @Valid for input.
+ */
+@RestController
+@RequestMapping("/api/v1/customers")
+public class NotificationPreferenceController {</code></pre>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be1-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be1-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Let Copilot complete the
+                                            controller. Then ask it to generate the corresponding
+                                            <code>NotificationPreferenceService</code> and
+                                            <code>NotificationPreferenceDTO</code>.
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be1-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be1-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">3</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Review the output: Does
+                                            it use proper HTTP status codes? Is input validated? Ask Copilot: <em>"Add
+                                                proper error handling with a custom exception and
+                                                @ControllerAdvice."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be1-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be1-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Use <strong>Inline
+                                                Chat</strong> (<code>Ctrl+I</code>) inside the service class to add
+                                            business logic: <em>"Add a method that validates notification preferences
+                                                according to Rabobank's communication policy: max 3 channels, at least
+                                                email or SMS, and opt-in timestamp must be within the last 12
+                                                months."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be1-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be1-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot to generate
+                                            unit tests with JUnit 5 and Mockito for the service layer. Ensure tests
+                                            cover both happy path and validation failures.</p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be1-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be1-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Practice the
+                                            <strong>Tab-completion workflow</strong>: In the test file, type the
+                                            starting line of a new test method and press <code>Tab</code> to accept
+                                            Copilot's suggestion. Then use <code>Ctrl+Enter</code> to see alternative
+                                            suggestions. Accept, reject, or modify each one.
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be1-s7" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be1-s7" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">7</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Reflect:</strong>
+                                            Did the generated code follow REST best practices? What needed manual
+                                            adjustment? How did providing business context (Rabobank communication
+                                            policy) change the quality of suggestions?</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                                <strong>&#x1F4A1; Tip:</strong> Keep a <code>CODING_STANDARDS.md</code> file open in
+                                your project — Copilot uses it as context to align generated code with your conventions.
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- BE Lab 2 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="be2">
+                        <button type="button" onclick="toggleLab('be2')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-violet-100 text-violet-700 text-sm font-bold flex items-center justify-center">L2</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Steering Copilot with Internal Standards</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 1 &middot; &#x23F1; ~25 min &middot;
+                                        IntelliJ / VS Code</p>
+                                </div>
+                            </div>
+                            <svg id="be2-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="be2-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-violet-50 border border-violet-200 rounded-lg px-4 py-3 text-sm text-violet-800">
+                                <strong>Scenario:</strong> Your team has specific Rabobank coding conventions (naming,
+                                error handling, logging format). Explore how providing Copilot with context files
+                                changes the quality of suggestions.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be2-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be2-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">1</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Create a
+                                                <code>.github/copilot-instructions.md</code> file with Rabobank-specific
+                                                rules:
+                                            </p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code># Rabobank Back-end Coding Standards
+- Use SLF4J for logging, never System.out.println
+- All REST endpoints must return ResponseEntity
+- Use Dutch Javadoc for internal APIs
+- Apply @Validated on controller method parameters
+- Exception handling via @ControllerAdvice only
+- All monetary amounts use BigDecimal, never double/float
+- Database queries use parameterized statements only
+- Sensitive data (BSN, account numbers) must be masked in logs</code></pre>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be2-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be2-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Generate a new endpoint
+                                            <strong>without</strong> the instructions file open. Ask Copilot to create a
+                                            <code>TransactionHistoryService</code> with a method that retrieves
+                                            transactions by date range. Note the style of
+                                            suggestions: does it use BigDecimal? SLF4J? ResponseEntity?
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be2-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be2-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">3</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Now open the
+                                            <code>copilot-instructions.md</code> and repeat the exact same task. Compare
+                                            the
+                                            results side by side. Document which standards were followed and which were
+                                            still missed.
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be2-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be2-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Go further: create a
+                                            <code>.vscode/settings.json</code> with custom Copilot instructions at the
+                                            IDE level. Add workspace-level instructions: <em>"This is a Rabobank Java 17
+                                                / Spring Boot 3 project. Follow the standards in
+                                                .github/copilot-instructions.md."</em>
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be2-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be2-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Test context awareness:
+                                            Ask Copilot Chat with <code>@workspace</code>: <em>"Based on our coding
+                                                standards, review this TransactionHistoryService for compliance. List
+                                                any violations."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be2-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be2-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Reflect:</strong>
+                                            How much did the context file improve alignment with Rabobank standards?
+                                            Which technique had the most impact: the instructions file, open tabs, or
+                                            explicit prompts?</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                                <strong>&#x1F4A1; Tip:</strong> The <code>.github/copilot-instructions.md</code> file is
+                                automatically used by Copilot as context for all suggestions in the repository. This is
+                                the most impactful way to enforce team-wide coding standards. Share it via your Git repo
+                                so the whole Rabobank team benefits.
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- BE Lab 3 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="be3">
+                        <button type="button" onclick="toggleLab('be3')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-violet-100 text-violet-700 text-sm font-bold flex items-center justify-center">L3</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Architecture Documentation &amp; System
+                                        Understanding</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 2 &middot; &#x23F1; ~25 min &middot;
+                                        IntelliJ / VS Code</p>
+                                </div>
+                            </div>
+                            <svg id="be3-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="be3-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-violet-50 border border-violet-200 rounded-lg px-4 py-3 text-sm text-violet-800">
+                                <strong>Scenario:</strong> A new team member is onboarding and needs to understand a
+                                complex Rabobank payment processing microservice. Use Copilot to generate architecture
+                                documentation, code explanations, and a system overview from the existing code.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be3-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be3-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">1</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Open a service with
+                                            multiple classes. Use Copilot Chat with <code>@workspace</code>:
+                                            <em>"Explain the architecture of this service. List all REST endpoints,
+                                                their dependencies, and the data flow."</em>
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be3-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be3-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Select a complex method
+                                            and use <code>/explain</code>:
+                                            <em>"/explain How does this payment processing method work? Walk through it
+                                                step by step, including error handling and edge cases."</em> Verify the
+                                            explanation's accuracy.
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be3-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be3-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">3</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot:
+                                            <em>"Generate a Mermaid sequence diagram for the payment notification
+                                                flow between the PaymentService, NotificationService, and the external
+                                                iDEAL gateway."</em> Copy the Mermaid code and preview it.
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be3-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be3-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Use <code>/doc</code> to
+                                            generate Javadoc for the service class. Then ask: <em>"Generate an OpenAPI
+                                                3.0 specification (YAML) for all endpoints in this controller. Include
+                                                request/response schemas, error codes, and example values using Rabobank
+                                                data formats (IBAN, BIC)."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be3-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be3-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot: <em>"Write
+                                                an ADR (Architecture Decision Record) for why we chose event-driven
+                                                communication between the payment and notification services. Include
+                                                context, decision, consequences, and alternatives considered."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be3-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be3-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Generate a project README
+                                            using <code>@workspace</code>: <em>"Generate a comprehensive README.md for
+                                                this microservice. Include: purpose, architecture diagram (Mermaid),
+                                                setup instructions, API overview, deployment notes, and team
+                                                contacts."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be3-s7" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be3-s7" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">7</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Reflect:</strong>
+                                            How accurate was the generated documentation? What context did you have to
+                                            add manually? Did the Mermaid diagram correctly represent the actual data
+                                            flow?</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                                <strong>&#x1F4A1; Tip:</strong> Use <code>@workspace</code> for project-wide context,
+                                <code>/explain</code> for detailed method walkthroughs, and <code>/doc</code> for
+                                generating documentation. For API specs, keep your controller and DTO files open side by
+                                side.
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- BE Lab 4 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="be4">
+                        <button type="button" onclick="toggleLab('be4')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-violet-100 text-violet-700 text-sm font-bold flex items-center justify-center">L4</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Security, Hallucinations &amp; Data Safety
+                                    </p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 2 &middot; &#x23F1; ~30 min &middot;
+                                        IntelliJ / VS Code</p>
+                                </div>
+                            </div>
+                            <svg id="be4-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="be4-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-violet-50 border border-violet-200 rounded-lg px-4 py-3 text-sm text-violet-800">
+                                <strong>Scenario:</strong> Copilot generated a database query method that concatenates
+                                user input directly into SQL. Find the vulnerability and fix it using parameterized
+                                queries.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be4-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be4-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">1</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Review the vulnerable
+                                                code Copilot generated:</p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code>// WARNING: This code has a SQL injection vulnerability!
+public List&lt;Customer&gt; findByName(String name) {
+    String sql = "SELECT * FROM customers WHERE name = '" + name + "'";
+    return jdbcTemplate.query(sql, new CustomerRowMapper());
+}</code></pre>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be4-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be4-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Identify the SQL
+                                            injection risk. Ask Copilot: <em>"Rewrite this method using parameterized
+                                                queries to prevent SQL injection."</em> Verify the fix uses
+                                            <code>?</code> placeholders or named parameters.
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be4-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be4-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">3</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Now review another
+                                                vulnerable pattern. Ask Copilot to analyze this logging code:</p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code>// Is there a security issue here?
+log.info("Customer login: BSN=" + customer.getBsn()
+  + ", account=" + customer.getIban()
+  + ", password attempt=" + passwordAttempt);</code></pre>
+                                            <p class="text-xs text-gray-500 mt-1">Ask Copilot: <em>"What sensitive data
+                                                    is being leaked in this log statement? Fix it according to Rabobank
+                                                    data protection policies."</em></p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be4-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be4-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot: <em>"What
+                                                other security vulnerabilities should I watch for in Copilot-generated
+                                                back-end code at a bank? List OWASP Top 10 risks specific to banking
+                                                APIs."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be4-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be4-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot to generate a
+                                            security review checklist for Rabobank back-end code reviews. Include
+                                            categories: authentication, authorization, input validation, data masking,
+                                            logging, and error handling.</p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be4-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be4-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Generate a security unit
+                                            test: <em>"Write a test that verifies this query method is immune to SQL
+                                                injection. Include test cases with malicious input like: ' OR 1=1 --, ';
+                                                DROP TABLE customers; --, and UNION SELECT attacks."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be4-s7" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be4-s7" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">7</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Reflect:</strong>
+                                            Would you have noticed the SQL injection if you'd accepted Copilot's
+                                            suggestion without review? What about the data leak in the logging? Create a
+                                            personal "always check" list for security-sensitive code.</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="rounded-lg bg-red-50 border border-red-200 px-4 py-2 text-sm text-red-800">
+                                <strong>&#x26A0;&#xFE0F; Key lesson:</strong> In a banking context, every generated
+                                query must be reviewed for injection risks. Never concatenate user input into SQL
+                                strings. Always mask PII (BSN, IBAN, passwords) in logs. Copilot generates code that
+                                works, but security requires human judgment.
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- BE Lab 5 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="be5">
+                        <button type="button" onclick="toggleLab('be5')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-violet-100 text-violet-700 text-sm font-bold flex items-center justify-center">L5</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Unit Testing &amp; Edge Case Coverage</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 2 &middot; &#x23F1; ~35 min &middot;
+                                        IntelliJ / VS Code + JUnit 5</p>
+                                </div>
+                            </div>
+                            <svg id="be5-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="be5-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-violet-50 border border-violet-200 rounded-lg px-4 py-3 text-sm text-violet-800">
+                                <strong>Scenario:</strong> You're developing a <code>BankAccountService</code> for
+                                Rabobank's core banking platform. The service handles deposits, withdrawals, and
+                                transfers. You need comprehensive test coverage before the code can pass the Rabobank
+                                quality gate.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be5-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be5-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">1</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Create a
+                                                <code>BankAccountService.java</code> with the following code:</p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code>public class BankAccountService {
+    private BigDecimal balance;
+    private final String iban;
+    private boolean isFrozen = false;
+
+    public BankAccountService(String iban, BigDecimal initialBalance) {
+        this.iban = iban;
+        this.balance = initialBalance;
+    }
+
+    public void deposit(BigDecimal amount) {
+        if (isFrozen) throw new AccountFrozenException(iban);
+        if (amount.compareTo(BigDecimal.ZERO) &lt;= 0)
+            throw new IllegalArgumentException("Deposit must be positive");
+        balance = balance.add(amount);
+    }
+
+    public void withdraw(BigDecimal amount) {
+        if (isFrozen) throw new AccountFrozenException(iban);
+        if (amount.compareTo(balance) &gt; 0)
+            throw new InsufficientFundsException(iban, balance, amount);
+        balance = balance.subtract(amount);
+    }
+
+    public void transfer(BankAccountService target, BigDecimal amount) {
+        this.withdraw(amount);
+        target.deposit(amount);
+    }
+
+    public BigDecimal getBalance() { return balance; }
+    public void freeze() { isFrozen = true; }
+    public void unfreeze() { isFrozen = false; }
+}</code></pre>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be5-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be5-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Create a test file. Use
+                                            the <code>/tests</code> slash command: <em>"/tests Generate JUnit 5 tests
+                                                for BankAccountService. Cover happy paths for deposit, withdraw, and
+                                                transfer."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be5-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be5-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">3</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Now test edge cases. Ask
+                                            Copilot: <em>"Add tests for: negative deposit amount, withdrawal exceeding
+                                                balance, transfer to/from frozen account, zero-amount deposit, very
+                                                large amounts (BigDecimal overflow), and transfer where source equals
+                                                target."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be5-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be5-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot to test a
+                                            banking-specific scenario: <em>"Add a test that verifies the transfer is
+                                                atomic: if the target deposit fails (e.g., target account is frozen),
+                                                the source withdrawal should also be rolled back. The balance should not
+                                                change."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be5-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be5-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Run the tests. Did the
+                                            atomicity test reveal a bug in the <code>transfer()</code> method? If so,
+                                            ask Copilot to fix it: <em>"The transfer method is not atomic. If deposit
+                                                fails, withdraw is not rolled back. Fix this."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be5-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be5-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Use Ghost Text to add
+                                            more tests: Type a new <code>@Test</code> method name like
+                                            <code>void transferBetweenDifferentCurrencies_shouldConvert()</code> and let
+                                            Copilot generate the test body. Generate 3-4 more tests this way.</p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be5-s7" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be5-s7" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">7</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Reflect:</strong>
+                                            Did Copilot's tests discover the atomicity bug? Which test generation method
+                                            worked best: <code>/tests</code>, explicit Chat prompts, or Ghost Text
+                                            autocompletion? What domain-specific banking tests did Copilot miss?</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                                <strong>&#x1F4A1; Tip:</strong> The most valuable tests aren't the ones Copilot
+                                generates automatically — they're the edge cases you think of based on your domain
+                                knowledge. Use Copilot to write the boilerplate, then add banking-specific scenarios
+                                manually. A good prompt: <em>"What edge cases would a financial auditor test?"</em>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- BE Lab 6 ─────────────────────────────────────────── -->
+                    <article class="rounded-xl border border-gray-200 overflow-hidden" data-lab="be6">
+                        <button type="button" onclick="toggleLab('be6')"
+                            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex-shrink-0 w-9 h-9 rounded-lg bg-violet-100 text-violet-700 text-sm font-bold flex items-center justify-center">L6</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Code Quality, Reliability &amp; Performance
+                                    </p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Module 3 &middot; &#x23F1; ~30 min &middot;
+                                        IntelliJ / VS Code + Spring Boot</p>
+                                </div>
+                            </div>
+                            <svg id="be6-chevron" class="chevron h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="be6-body" class="lab-body border-t border-gray-100 bg-gray-50 px-5 py-5 space-y-4">
+                            <div
+                                class="bg-violet-50 border border-violet-200 rounded-lg px-4 py-3 text-sm text-violet-800">
+                                <strong>Scenario:</strong> A Rabobank batch processing service generates monthly account
+                                statements but has performance problems at scale and code quality issues flagged in the
+                                last SonarQube scan. Use Copilot to systematically improve the code.
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be6-s1" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be6-s1" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">1</span>
+                                        <div>
+                                            <p class="step-text text-sm text-gray-700 font-medium">Review this
+                                                poorly-written service method and ask Copilot to identify all code
+                                                quality issues:</p>
+                                            <pre
+                                                class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto relative"><button type="button" class="copy-btn absolute top-2 right-2 text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded" onclick="copyCode(this)">Copy</button><code>public Map&lt;String, Object&gt; genStatement(String id, int m, int y) {
+    var c = customerRepo.findById(id);
+    var txns = txnRepo.findAll().stream()
+        .filter(t -&gt; t.getAccountId().equals(id))
+        .filter(t -&gt; t.getDate().getMonthValue() == m)
+        .filter(t -&gt; t.getDate().getYear() == y)
+        .collect(Collectors.toList());
+    double total = 0;
+    for (var t : txns) { total += t.getAmount(); }
+    Map&lt;String, Object&gt; result = new HashMap&lt;&gt;();
+    result.put("customer", c);
+    result.put("transactions", txns);
+    result.put("total", total);
+    result.put("generated", new Date());
+    return result;
+}</code></pre>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be6-s2" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be6-s2" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">2</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">
+                                            <strong>Readability:</strong> Ask Copilot: <em>"Improve readability: rename
+                                                all variables to be descriptive, add proper Javadoc, replace the Map
+                                                with a typed DTO (AccountStatementDTO), use BigDecimal instead of double
+                                                for monetary amounts."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be6-s3" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be6-s3" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">3</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">
+                                            <strong>Performance:</strong> Ask Copilot: <em>"This method loads ALL
+                                                transactions then filters in memory. For a bank with millions of
+                                                transactions per month, this will cause OutOfMemory errors. Rewrite
+                                                using a database query with date range and account ID parameters."</em>
+                                        </p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be6-s4" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be6-s4" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">4</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">
+                                            <strong>Reliability:</strong> Ask Copilot: <em>"Add proper error handling:
+                                                What happens if the customer doesn't exist? What if the transaction
+                                                query fails? Add null checks, Optional handling, and proper exception
+                                                types with meaningful messages."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be6-s5" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be6-s5" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">5</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Batch
+                                                optimization:</strong> Ask Copilot: <em>"This method generates one
+                                                statement at a time. Rabobank needs to generate 8 million statements
+                                                monthly. Rewrite this as a batch process using Spring Batch or parallel
+                                                streams with configurable chunk sizes."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be6-s6" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be6-s6" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">6</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium">Ask Copilot to add
+                                            observability: <em>"Add SLF4J logging with appropriate log levels,
+                                                Micrometer metrics for processing time and success/failure counts, and a
+                                                health check endpoint."</em></p>
+                                    </label>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="be6-s7" class="step-check hidden"
+                                        onchange="updateProgress()" />
+                                    <label for="be6-s7" class="flex items-start gap-3 cursor-pointer group">
+                                        <span
+                                            class="step-circle flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 text-xs font-bold flex items-center justify-center text-gray-400 group-hover:border-violet-400 transition">7</span>
+                                        <p class="step-text text-sm text-gray-700 font-medium"><strong>Reflect:</strong>
+                                            Compare original vs. final version. How many issues did Copilot correctly
+                                            identify? Which improvements — readability, performance, reliability, or
+                                            observability — had the most impact? Could Copilot have done all four in a
+                                            single prompt?</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                                <strong>&#x1F4A1; Tip:</strong> Tackle code quality improvements one category at a time
+                                (readability → performance → reliability → security). Copilot gives better results with
+                                focused prompts than "fix everything." For Rabobank-scale applications, always ask about
+                                the data volume implications.
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ── BACK LINK ────────────────────────────────────────── -->
+            <div class="text-center">
+                <a href="github-copilot.html"
+                    class="inline-flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-800 font-medium hover:underline transition">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back to program overview
+                </a>
+            </div>
+
+            <!-- ── ABOUT THE TRAINER ────────────────────────────────── -->
+            <section class="bg-white rounded-xl shadow-md px-6 py-5 space-y-3">
+                <h2 class="text-lg font-semibold text-gray-800">&#x1F468;&#x200D;&#x1F3EB; About the trainer</h2>
+                <p class="text-sm text-gray-600">
+                    This pilot program is delivered by <strong>Remsey Mailjard</strong>. Feel free to connect using the
+                    links below.
+                </p>
+                <div class="flex items-center gap-4 text-sm">
+                    <a href="https://www.linkedin.com/in/remseymailjard/" target="_blank" rel="noopener noreferrer"
+                        class="text-indigo-600 hover:underline font-medium">LinkedIn</a>
+                    <a href="https://www.remsey.nl" target="_blank" rel="noopener noreferrer"
+                        class="text-indigo-600 hover:underline font-medium">Remsey.nl</a>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-8 text-sm text-gray-500 pb-4">
+            <p>&copy; 2026 Remsey Mailjard. All rights reserved.</p>
+            <p id="footerNote">Hands-on labs for the Rabobank GitHub Copilot pilot program.</p>
+        </footer>
+    </div>
+
+    <script>
+        // ── Config (reuses same config as main page) ─────────────────
+        let CONFIG = {
+            organization: "Rabobank",
+            emailDomain: "rabobank.nl",
+            programTitle: "GitHub Copilot — Pilot Program",
+            workshopTitle: "GitHub Copilot for Developers",
+            repoUrl: "https://github.com/RemseyMailjard/GitHub-Copilot-for-Developers",
+            folderPath: ""
+        };
+
+        function buildDownloadUrl(config)
+        {
+            const target = config.folderPath
+                ? config.repoUrl + "/tree/main/" + config.folderPath
+                : config.repoUrl;
+            return "https://download-directory.github.io/?url=" + encodeURIComponent(target);
+        }
+
+        function applyConfig(c)
+        {
+            var badge = document.getElementById("heroBadge");
+            if (badge) badge.textContent = c.organization + " — Hands-on Labs";
+            var fn = document.getElementById("footerNote");
+            if (fn) fn.textContent = "Hands-on labs for the " + c.organization + " GitHub Copilot pilot program.";
+
+            var starterRepoLink = document.getElementById("starterRepoLink");
+            if (starterRepoLink) starterRepoLink.href = c.repoUrl || "#";
+            var starterDownloadLink = document.getElementById("starterDownloadLink");
+            if (starterDownloadLink) starterDownloadLink.href = buildDownloadUrl(c);
+        }
+
+        fetch("github-copilot.config.json")
+            .then(function (r) { return r.json(); })
+            .then(function (d) { CONFIG = Object.assign({}, CONFIG, d); applyConfig(CONFIG); })
+            .catch(function () { applyConfig(CONFIG); });
+
+        // ── Track tabs ───────────────────────────────────────────────
+        function switchTrack(track)
+        {
+            ["frontend", "backend"].forEach(function (t)
+            {
+                document.getElementById("track-" + t).classList.toggle("active", t === track);
+                var btn = document.getElementById("tab-" + t);
+                btn.classList.toggle("active", t === track);
+                if (t !== track) { btn.classList.add("border-gray-300", "text-gray-600"); btn.classList.remove("border-indigo-300"); }
+                else { btn.classList.remove("border-gray-300", "text-gray-600"); btn.classList.add("border-indigo-300"); }
+            });
+        }
+
+        // ── Collapse/expand labs ─────────────────────────────────────
+        function toggleLab(id)
+        {
+            var body = document.getElementById(id + "-body");
+            var chev = document.getElementById(id + "-chevron");
+            if (!body) return;
+            var open = body.classList.toggle("open");
+            if (chev) chev.classList.toggle("open", open);
+        }
+
+        // ── Copy code ────────────────────────────────────────────────
+        function copyCode(btn)
+        {
+            var code = btn.parentElement.querySelector("code");
+            if (!code) return;
+            navigator.clipboard.writeText(code.textContent).then(function ()
+            {
+                btn.textContent = "Copied!";
+                setTimeout(function () { btn.textContent = "Copy"; }, 1500);
+            });
+        }
+
+        // ── Progress tracking (localStorage) ─────────────────────────
+        var PROGRESS_KEY = "rabobankCopilotLabsProgress";
+
+        function getAllCheckboxes()
+        {
+            return Array.from(document.querySelectorAll(".step-check"));
+        }
+
+        function saveProgress()
+        {
+            var state = {};
+            getAllCheckboxes().forEach(function (cb) { state[cb.id] = cb.checked; });
+            try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(state)); } catch (e) { }
+        }
+
+        function loadProgress()
+        {
+            try
+            {
+                var raw = localStorage.getItem(PROGRESS_KEY);
+                if (!raw) return;
+                var state = JSON.parse(raw);
+                getAllCheckboxes().forEach(function (cb)
+                {
+                    if (state[cb.id]) cb.checked = true;
+                });
+            } catch (e) { }
+        }
+
+        function updateProgress()
+        {
+            saveProgress();
+            var all = getAllCheckboxes();
+            var done = all.filter(function (cb) { return cb.checked; }).length;
+            var total = all.length;
+            document.getElementById("progressCount").textContent = done + " / " + total;
+            // Update SVG ring
+            var circ = document.getElementById("progressCircle");
+            var circumference = 2 * Math.PI * 28; // r=28
+            var pct = total > 0 ? done / total : 0;
+            circ.style.strokeDashoffset = circumference * (1 - pct);
+            if (pct >= 1) circ.style.stroke = "#22c55e"; else circ.style.stroke = "#6366f1";
+        }
+
+        // ── Load user from main training page ────────────────────
+        function loadUser()
+        {
+            try
+            {
+                var raw = localStorage.getItem('RABO_COPILOT_USER');
+                if (!raw) {
+                    document.getElementById('registerBanner').classList.remove('hidden');
+                    return;
+                }
+                var user = JSON.parse(raw);
+                if (user && user.fullName) {
+                    document.getElementById('userNameDisplay').textContent = user.firstName || user.fullName;
+                    var trackSpan = document.getElementById('userTrackDisplay');
+                    if (user.track) trackSpan.textContent = '(' + user.track + ' track)';
+                    document.getElementById('userBanner').classList.remove('hidden');
+                }
+            } catch (_) {
+                document.getElementById('registerBanner').classList.remove('hidden');
+            }
+        }
+
+        // Initialise
+        loadUser();
+        loadProgress();
+        updateProgress();
+    </script>
+</body>
+
+</html>
