@@ -122,7 +122,7 @@ utils/
 ## 🛠️ Technology Stack
 
 ### Frontend
-- **Language**: Vanilla JavaScript (ES2022 modules) — geen React, geen bundler
+- **Language**: Vanilla JavaScript (ES2022 modules) — no React, no bundler
 - **Styling**: CSS3 with custom properties (design tokens in `variables.css`)
 - **Data**: Mock mode (in-memory) or real REST API via `fetch()`
 - **Testing**: No test runner by default — add Jest as part of Lab 5
@@ -139,40 +139,40 @@ utils/
 
 ```
 Project 1 - Rabobank case/
-├── frontend/                        ← Vanilla HTML/CSS/JS (geen build stap)
+├── frontend/                        ← Vanilla HTML/CSS/JS (no build step)
 │   ├── index.html                   ← App shell — header, sidebar, main, footer
 │   ├── css/
-│   │   ├── reset.css                ← Minimale CSS reset
+│   │   ├── reset.css                ← Minimal CSS reset
 │   │   ├── variables.css            ← CSS custom properties (design tokens)
-│   │   └── styles.css               ← Alle component- en layoutstijlen
+│   │   └── styles.css               ← All component and layout styles
 │   ├── js/
-│   │   ├── app.js                   ← Entry point — bootstrapt alles
+│   │   ├── app.js                   ← Entry point — bootstraps everything
 │   │   ├── state.js                 ← Tiny reactive state store
-│   │   ├── api.js                   ← API-laag: mock of real backend
+│   │   ├── api.js                   ← API layer: mock or real backend
 │   │   ├── data.js                  ← In-memory mock data (10 cases)
 │   │   ├── config.js                ← USE_REAL_BACKEND toggle + API_BASE_URL
 │   │   ├── utils/
-│   │   │   └── formatters.js        ← Datum, IBAN, prioriteit (Lab 5: bugs!)
+│   │   │   └── formatters.js        ← Date, IBAN, priority (Lab 5: bugs!)
 │   │   └── components/
-│   │       ├── notification.js      ← Lab 1 — stub, nog te implementeren
-│   │       ├── case-card.js         ← Lab 2 — string concat, te refactoren
-│   │       ├── case-detail.js       ← Detailweergave met notitietijdlijn
-│   │       ├── case-list.js         ← Lab 6 — performanceproblemen
-│   │       └── admin.js             ← Lab 4 — XSS-kwetsbaarheid
+│   │       ├── notification.js      ← Lab 1 — stub, not yet implemented
+│   │       ├── case-card.js         ← Lab 2 — string concat, to refactor
+│   │       ├── case-detail.js       ← Detail view with note timeline
+│   │       ├── case-list.js         ← Lab 6 — performance issues
+│   │       └── admin.js             ← Lab 4 — XSS vulnerability
 │   └── data/
-│       └── cases.json               ← Mock data als JSON (ter referentie)
+│       └── cases.json               ← Mock data as JSON (for reference)
 │
 ├── backend/                         ← Java 17 + Spring Boot 3
 │   └── src/main/java/nl/rabobank/casesummary/
-│       ├── controller/              ← REST-endpoints
-│       ├── service/                 ← Bedrijfslogica
+│       ├── controller/              ← REST endpoints
+│       ├── service/                 ← Business logic
 │       ├── repository/              ← Spring Data JPA
-│       ├── model/                   ← JPA-entiteiten
+│       ├── model/                   ← JPA entities
 │       ├── dto/                     ← Data Transfer Objects
 │       └── config/                  ← CORS + DataLoader
 │
 └── .github/
-    └── copilot-instructions.md      ← Custom Copilot instructies voor dit project
+    └── copilot-instructions.md      ← Custom Copilot instructions for this project
 ```
 
 ---
@@ -181,17 +181,17 @@ Project 1 - Rabobank case/
 
 ### Frontend
 ```bash
-# Geen installatie nodig — open index.html via Live Server in VS Code
-# Of via terminal met npx:
+# No installation needed — open index.html via Live Server in VS Code
+# Or via terminal with npx:
 npx serve frontend/
 ```
 
 ### Backend
 ```bash
 cd backend
-mvn spring-boot:run          # Start op poort 8080
-mvn test                     # Draai alle tests
-mvn spring-boot:run -Dspring-boot.run.arguments=--debug   # Met debug logging
+mvn spring-boot:run          # Start on port 8080
+mvn test                     # Run all tests
+mvn spring-boot:run -Dspring-boot.run.arguments=--debug   # With debug logging
 ```
 
 ---
@@ -200,24 +200,24 @@ mvn spring-boot:run -Dspring-boot.run.arguments=--debug   # Met debug logging
 
 ## Task 0 — Setup & Model Selection
 
-### 0.1 Open het project in VS Code
+### 0.1 Open the project in VS Code
 
-1. Open de map `Project 1 - Rabobank case` in VS Code
-2. Start **Live Server** voor de frontend (`index.html` → _Open with Live Server_)
-3. Verifieer dat de app laadt op [http://localhost:5500](http://localhost:5500)
-4. Verken de app: klik cases aan, bekijk de detail-weergave, probeer het Admin-paneel
+1. Open the `Project 1 - Rabobank case` folder in VS Code
+2. Start **Live Server** for the frontend (`index.html` → _Open with Live Server_)
+3. Verify that the app loads at [http://localhost:5500](http://localhost:5500)
+4. Explore the app: click cases, view the detail panel, try the Admin panel
 
-### 0.2 Kies je AI-model
+### 0.2 Choose your AI model
 
-Selecteer het juiste model voor de taak:
+Select the right model for the task:
 
-- **GPT-4.1**: Geschikt voor component-generatie, refactoring, documentatie en bugfixes
-- **Claude Sonnet**: Uitstekend voor complexe code-analyse, security reviews, en agent mode-taken
+- **GPT-4.1**: Suitable for component generation, refactoring, documentation, and bug fixes
+- **Claude Sonnet**: Excellent for complex code analysis, security reviews, and agent mode tasks
 
-**Model wisselen:**
+**Switch model:**
 1. Open GitHub Copilot Chat
-2. Klik op de model-selector dropdown
-3. Selecteer het gewenste model per taak
+2. Click on the model selector dropdown
+3. Select the desired model per task
 
 ---
 
@@ -225,9 +225,9 @@ Selecteer het juiste model voor de taak:
 
 ### 1.1 Repository Exploration
 
-**Stel je voor: je bent een nieuwe developer die vandaag start bij Rabobank. Je moet het project en de architectuur begrijpen.**
+**Imagine: you are a new developer starting at Rabobank today. You need to understand the project and architecture.**
 
-Open Copilot Chat en stel de volgende vragen (typ ze één voor één, kopieer ze niet):
+Open Copilot Chat and ask the following questions (type them one by one, don't copy-paste):
 
 - `@workspace Can you explain the architecture of this application?`
 - `@workspace How do the frontend components communicate with each other?`
@@ -235,68 +235,68 @@ Open Copilot Chat en stel de volgende vragen (typ ze één voor één, kopieer z
 - `@workspace What is the difference between mock mode and real backend mode?`
 - `@workspace Which files are relevant for Lab 1 about the NotificationBanner?`
 
-### 1.2 Technologieën verkennen met `@github`
+### 1.2 Exploring technologies with `@github`
 
-Gebruik Copilot's webzoekfuncties om meer te leren over de gebruikte technologieën:
+Use Copilot's web search features to learn more about the technologies used:
 
-**Instructies:**
-1. Open Copilot Chat in Ask-modus
-2. Stel deze vragen één voor één:
+**Instructions:**
+1. Open Copilot Chat in Ask mode
+2. Ask these questions one by one:
    - `@github How do ES modules work in vanilla JavaScript without a bundler?`
    - `@github What are CSS custom properties and how do I use them for theming?`
    - `@github How does the Fetch API handle error states in JavaScript?`
    - `@github What is the difference between textContent and innerHTML and when is innerHTML dangerous?`
    - `@github How do I implement a debounce function in vanilla JavaScript?`
 
-> **Tip:** Als je Bing als referentiebron ziet in de respons, doet `@github` een live webzoekopdracht.
+> **Tip:** If you see Bing as a reference source in the response, `@github` is performing a live web search.
 
 ### 1.3 Role Prompting & Custom Instructions
 
-Custom instructions laten jou Copilot structureel aansturen zonder elke keer dezelfde context te herhalen.
+Custom instructions let you structurally guide Copilot without repeating the same context every time.
 
-**Instructies:**
-1. Open `.github/copilot-instructions.md` in de `frontend/` map
-2. Lees de bestaande instructies — deze zijn al geconfigureerd voor Rabobank-conventies
-3. Test de instructies door Copilot Chat te vragen:
+**Instructions:**
+1. Open `.github/copilot-instructions.md` in the `frontend/` folder
+2. Read the existing instructions — these are already configured for Rabobank conventions
+3. Test the instructions by asking Copilot Chat:
    - `"Write a new JavaScript utility function for formatting a Dutch phone number"`
-   - Controleer of Copilot automatisch JSDoc toevoegt, `const`/`let` gebruikt, en Rabobank-stijl respecteert
-4. Voeg een extra instructie toe aan het bestand, bijvoorbeeld:
+   - Check whether Copilot automatically adds JSDoc, uses `const`/`let`, and respects the Rabobank style
+4. Add an extra instruction to the file, for example:
    ```
    - Always use Dutch variable names for domain objects (klant, zaak, iban)
    - Never use `var` — always use `const` or `let`
    ```
-5. Test opnieuw — merk op hoe de suggesties veranderen
+5. Test again — notice how the suggestions change
 
-### 1.4 Code Review met Copilot
+### 1.4 Code Review with Copilot
 
-**Instructies:**
+**Instructions:**
 1. Open `js/components/case-card.js`
-2. Selecteer alle code en klik rechtermuisknop → **Copilot** → **Review**
-3. Bekijk de feedback — let op opmerkingen over `innerHTML`, string-concatenatie, en XSS
-4. Vraag Copilot Chat: _"What are the top 3 problems with this code from a security and maintainability perspective?"_
-5. Herhaal voor `js/utils/formatters.js` — Copilot zou de opzettelijke bugs moeten opmerken
+2. Select all code and right-click → **Copilot** → **Review**
+3. Review the feedback — pay attention to comments about `innerHTML`, string concatenation, and XSS
+4. Ask Copilot Chat: _"What are the top 3 problems with this code from a security and maintainability perspective?"_
+5. Repeat for `js/utils/formatters.js` — Copilot should notice the intentional bugs
 
-### 1.5 Documentatie genereren met `/doc`
+### 1.5 Generate documentation with `/doc`
 
-**Instructies:**
+**Instructions:**
 1. Open `js/api.js`
-2. Selecteer de functie `apiFetch` (regels ~50–70)
-3. Druk op `Ctrl+I` en typ: `/doc`
-4. Bekijk de gegenereerde JSDoc — klopt de beschrijving van de parameters en return-waarde?
-5. Genereer ook documentatie voor `simulateFetch` en `slugify`
-6. Open `js/components/case-detail.js` en genereer JSDoc voor de helperfuncties `buildInfoCard` en `buildTimeline`
+2. Select the `apiFetch` function (lines ~50–70)
+3. Press `Ctrl+I` and type: `/doc`
+4. Review the generated JSDoc — is the description of the parameters and return value correct?
+5. Also generate documentation for `simulateFetch` and `slugify`
+6. Open `js/components/case-detail.js` and generate JSDoc for the helper functions `buildInfoCard` and `buildTimeline`
 
-> **Tip:** Copilot genereert betere documentatie als de bestandsnaam en omringende code duidelijk zijn. Houd gerelateerde bestanden open in VS Code.
+> **Tip:** Copilot generates better documentation when the filename and surrounding code are clear. Keep related files open in VS Code.
 
-### 1.6 Code fixeren — implementeer de NotificationBanner
+### 1.6 Fix code — implement the NotificationBanner
 
-De `showNotification()` functie in `js/components/notification.js` is een lege stub. De app gebruikt hem al overal, maar hij doet niets.
+The `showNotification()` function in `js/components/notification.js` is an empty stub. The app already uses it everywhere, but it does nothing.
 
-**Instructies:**
+**Instructions:**
 1. Open `js/components/notification.js`
-2. Lees de taakomschrijving in de JSDoc-commentaren bovenaan het bestand
-3. Open ook `css/variables.css` en `css/styles.css` zodat Copilot de CSS-klassen als context heeft
-4. Druk op `Ctrl+I` en typ:
+2. Read the task description in the JSDoc comments at the top of the file
+3. Also open `css/variables.css` and `css/styles.css` so Copilot has the CSS classes as context
+4. Press `Ctrl+I` and type:
    ```
    Implement showNotification using the DOM API.
    Append a banner to #notification-area in index.html.
@@ -304,39 +304,39 @@ De `showNotification()` functie in `js/components/notification.js` is een lege s
    Add a close (×) button. Use the .notification and .notification--{type} CSS classes.
    Animate in with a slide-in transition.
    ```
-5. Controleer of de bestaande `.notification`-klassen in `styles.css` worden gebruikt (zoek op `.notification`)
-6. Test in de browser: open de browser console en roep `showNotification('Test!', 'success')` aan
+5. Verify that the existing `.notification` classes in `styles.css` are being used (search for `.notification`)
+6. Test in the browser: open the browser console and call `showNotification('Test!', 'success')`
 
-### 1.7 Unit Tests genereren
+### 1.7 Generate Unit Tests
 
-`formatters.js` bevat de functie `calculatePriorityScore()` met **drie opzettelijke bugs**. Gebruik Copilot om tests te genereren die de bugs blootleggen.
+`formatters.js` contains the `calculatePriorityScore()` function with **three intentional bugs**. Use Copilot to generate tests that expose the bugs.
 
-**Instructies:**
-1. Open `js/utils/formatters.js` en lees de commentaren bij `calculatePriorityScore`
-2. Maak een nieuw bestand `js/utils/formatters.test.js`
-3. Selecteer alle code in `formatters.js` en druk op `Ctrl+I` → typ: `/tests`
-4. Verbeter de gegenereerde tests door Copilot Chat te vragen:
+**Instructions:**
+1. Open `js/utils/formatters.js` and read the comments at `calculatePriorityScore`
+2. Create a new file `js/utils/formatters.test.js`
+3. Select all code in `formatters.js` and press `Ctrl+I` → type: `/tests`
+4. Improve the generated tests by asking Copilot Chat:
    _"/tests Generate tests specifically for calculatePriorityScore covering: (1) daysOpen = 0, (2) priority = 'critical', (3) resolved cases with status 'resolved', (4) escalated cases. Show which tests currently fail due to bugs."_
-5. Voeg een **describe-blok** toe en run de tests met Node.js:
+5. Add a **describe block** and run the tests with Node.js:
    ```bash
    node --experimental-vm-modules js/utils/formatters.test.js
    ```
-   Of installeer Jest: `npm init -y && npm install --save-dev jest`
-6. Voor elke falende test: selecteer de foutmelding, druk op `Ctrl+I` → `/fix`
+   Or install Jest: `npm init -y && npm install --save-dev jest`
+6. For each failing test: select the error message, press `Ctrl+I` → `/fix`
 
-> **Verwacht gedrag:** Drie tests zouden moeten falen — dat is correct. De tests leggen de bestaande bugs bloot.
+> **Expected behavior:** Three tests should fail — that is correct. The tests expose the existing bugs.
 
-### 1.8 Code optimaliseren
+### 1.8 Optimize code
 
-De `renderCaseList()` in `case-list.js` veroorzaakt onnodige DOM-reflows bij elke keystroke in de zoekbalk.
+The `renderCaseList()` in `case-list.js` causes unnecessary DOM reflows on every keystroke in the search bar.
 
-**Instructies:**
-1. Open `js/components/case-list.js` en lees de `TODO Lab 6`-commentaren
-2. Selecteer de `renderCaseList` functie
-3. Vraag Copilot Chat (gebruik **Claude Sonnet** voor beste resultaat):
+**Instructions:**
+1. Open `js/components/case-list.js` and read the `TODO Lab 6` comments
+2. Select the `renderCaseList` function
+3. Ask Copilot Chat (use **Claude Sonnet** for best results):
    _"Optimize this renderCaseList function. Replace the append-one-by-one loop with DocumentFragment to batch all DOM insertions in a single operation. Explain why this is faster."_
-4. Bekijk de optimalisatie en accepteer of pas aan
-5. Vraag daarna: _"Also wrap the onFilterChange callback in bindSearchInput in a debounce function with a 300ms delay. Explain what debouncing is and why it matters for a search input."_
+4. Review the optimization and accept or adjust
+5. Then ask: _"Also wrap the onFilterChange callback in bindSearchInput in a debounce function with a 300ms delay. Explain what debouncing is and why it matters for a search input."_
 
 ---
 
@@ -344,70 +344,70 @@ De `renderCaseList()` in `case-list.js` veroorzaakt onnodige DOM-reflows bij elk
 
 ### 2.1 Custom Chat Modes
 
-Custom chat modes maken gespecialiseerde AI-assistenten voor specifieke taken.
+Custom chat modes create specialized AI assistants for specific tasks.
 
-**Instructies:**
-1. Maak een nieuw bestand: `.github/chatmodes/security-reviewer.chatmode.md`
-2. Voeg de volgende inhoud toe:
+**Instructions:**
+1. Create a new file: `.github/chatmodes/security-reviewer.chatmode.md`
+2. Add the following content:
    ```markdown
    # Security Reviewer — Rabobank Frontend
 
-   Je bent een security reviewer voor Rabobank front-end code.
+   You are a security reviewer for Rabobank front-end code.
 
-   ## Instructies
-   - Zoek altijd naar XSS-kwetsbaarheden (innerHTML met user-data)
-   - Controleer op PII-blootstelling (IBAN, BSN, wachtwoorden in logs of UI)
-   - Verifieer of server-side autorisatie aanwezig is voor gevoelige acties
-   - Markeer client-side-only authenticatiechecks als onveilig
-   - Stel DOM API-alternatieven voor in plaats van innerHTML
-   - Geef je bevindingen in het formaat: RISICO | LOCATIE | AANBEVELING
+   ## Instructions
+   - Always look for XSS vulnerabilities (innerHTML with user data)
+   - Check for PII exposure (IBAN, BSN, passwords in logs or UI)
+   - Verify that server-side authorization is present for sensitive actions
+   - Flag client-side-only authentication checks as insecure
+   - Suggest DOM API alternatives instead of innerHTML
+   - Report your findings in the format: RISK | LOCATION | RECOMMENDATION
    ```
-3. Gebruik de nieuwe mode vanuit de Copilot Chat mode-picker
-4. Laat de security reviewer `js/components/admin.js` beoordelen
+3. Use the new mode from the Copilot Chat mode picker
+4. Have the security reviewer assess `js/components/admin.js`
 
 ### 2.2 Prompt Files
 
-**Instructies:**
-1. Maak een nieuw bestand: `.github/prompts/rabobank-component.prompt.md`
-2. Voeg toe:
+**Instructions:**
+1. Create a new file: `.github/prompts/rabobank-component.prompt.md`
+2. Add:
    ```markdown
    Rabobank frontend component checklist:
-   - Gebruik de DOM API (createElement, textContent) — nooit innerHTML met user-data
-   - Voeg aria-label toe aan alle interactieve elementen
-   - Gebruik CSS-klassen uit variables.css voor kleuren (--color-primary, --color-accent)
-   - Exporteer de hoofdfunctie als named export
-   - Voeg JSDoc toe met @param en @returns
-   - Zorg dat elk component werkt zonder een framework (pure DOM API)
+   - Use the DOM API (createElement, textContent) — never innerHTML with user data
+   - Add aria-label to all interactive elements
+   - Use CSS classes from variables.css for colors (--color-primary, --color-accent)
+   - Export the main function as a named export
+   - Add JSDoc with @param and @returns
+   - Ensure each component works without a framework (pure DOM API)
    ```
-3. Voeg dit prompt-bestand toe als context in Copilot Chat bij het maken van een nieuw component
-4. Vraag Copilot: _"Create a new LoadingSpinner component following the Rabobank component checklist"_
+3. Add this prompt file as context in Copilot Chat when creating a new component
+4. Ask Copilot: _"Create a new LoadingSpinner component following the Rabobank component checklist"_
 
 ### 2.3 Chat Rollback & Prompt Editing
 
-**Instructies:**
-1. Vraag Copilot Chat om een nieuwe `filterCases(cases, query)` utility-functie te maken
-2. Klik op je originele prompt in de chatgeschiedenis en bewerk hem:
+**Instructions:**
+1. Ask Copilot Chat to create a new `filterCases(cases, query)` utility function
+2. Click on your original prompt in the chat history and edit it:
    _"Also handle filtering by status and priority, and make the function case-insensitive for all string comparisons"_
-3. Wissel van model (bijv. van GPT-4.1 naar Claude Sonnet) en pas opnieuw toe
-4. Vergelijk de gegenereerde implementaties van beide modellen
+3. Switch models (e.g. from GPT-4.1 to Claude Sonnet) and apply again
+4. Compare the generated implementations from both models
 
 ---
 
 ## Task 3 — Copilot Agent Mode
 
-### 3.1 Nieuwe feature bouwen met Agent Mode
+### 3.1 Build a new feature with Agent Mode
 
-GitHub Copilot's agent mode kan zelfstandig over meerdere bestanden werken, fouten herkennen en zichzelf corrigeren.
+GitHub Copilot's agent mode can work autonomously across multiple files, recognize errors, and self-correct.
 
-**Instructies:**
-1. Open Copilot Chat → kies **Agent mode** → selecteer **GPT 5.2**
-2. Zorg dat de frontend draait via Live Server
-3. Geef deze prompt mee:
+**Instructions:**
+1. Open Copilot Chat → choose **Agent mode** → select **Claude Sonnet**
+2. Ensure the frontend is running via Live Server
+3. Provide this prompt:
 
 ```
 Let's add a Statistics page to the Rabobank Case Summary tool.
 
-1. Create a new view section in frontend/index.html (data-view="stats") with a nav button "Statistieken"
+1. Create a new view section in frontend/index.html (data-view="stats") with a nav button "Statistics"
 2. Create a new file frontend/js/components/stats.js that renders case statistics:
    - Total number of cases per status (open, in-progress, resolved, escalated)
    - Number of cases per category (complaint, fraud-report, loan-request, etc.)
@@ -418,47 +418,47 @@ Let's add a Statistics page to the Rabobank Case Summary tool.
 ```
 
 **💡 Agent Mode tips:**
-- Wees specifiek: geef exacte bestandspaden mee
-- Nummer je stappen — agent mode werkt het beste sequentieel
-- Noem de bestaande CSS-klassen zodat de stijl consistent blijft
-- Eindig met: _"Implement step by step and let me review each change"_
+- Be specific: include exact file paths
+- Number your steps — agent mode works best sequentially
+- Mention the existing CSS classes to keep the style consistent
+- End with: _"Implement step by step and let me review each change"_
 
-4. Bekijk de voorgestelde wijzigingen per stap en accepteer of geef feedback
-5. Test in de browser: klik op "Statistieken" in de navigatie
+4. Review the proposed changes step by step and accept or provide feedback
+5. Test in the browser: click on "Statistics" in the navigation
 
-### 3.2 Vision — component maken vanuit een schets
+### 3.2 Vision — creating a component from a sketch
 
-**Instructies:**
-1. Maak een schets (of screenshot) van een gewenst UI-component, bijvoorbeeld een "Case Status Badge" met kleurcodering
-2. Open Copilot Chat met **Claude Sonnet**
-3. Sleep de afbeelding naar het chatvenster
-4. Vraag:
+**Instructions:**
+1. Create a sketch (or screenshot) of a desired UI component, for example a "Case Status Badge" with color coding
+2. Open Copilot Chat with **Claude Sonnet**
+3. Drag the image to the chat window
+4. Ask:
    ```
    Create a Rabobank Case Status Badge component based on this image.
    Use the DOM API (no innerHTML with data), apply CSS classes from variables.css,
    and export it as renderStatusBadge(status).
    ```
-5. Integreer het component in `case-card.js`
+5. Integrate the component into `case-card.js`
 
 ---
 
 ## Task 4 — MCP Servers
 
-### Voorbereiding
+### Preparation
 - GitHub Personal Access Token (PAT)
 
-**Instructies:**
-1. Open Copilot Chat → kies **Agent mode**
-2. Klik op het gereedschapspictogram → **Add MCP server**
-3. Voeg toe: **GitHub MCP** en **Playwright MCP**
+**Instructions:**
+1. Open Copilot Chat → choose **Agent mode**
+2. Click on the tools icon → **Add MCP server**
+3. Add: **GitHub MCP** and **Playwright MCP**
 
-### 4.1 End-to-end testen met Playwright MCP
+### 4.1 End-to-end testing with Playwright MCP
 
-**Doel:** Automatisch testen van de Rabobank-app zonder handmatig testcode te schrijven.
+**Goal:** Automatically testing the Rabobank app without manually writing test code.
 
-**Instructies:**
-1. Zorg dat de app draait: Live Server op poort 5500
-2. Vraag in Agent mode met Playwright MCP ingeschakeld:
+**Instructions:**
+1. Ensure the app is running: Live Server on port 5500
+2. Ask in Agent mode with Playwright MCP enabled:
    ```
    Using Playwright MCP, test the complete user flow of the Rabobank Case Summary app:
    1. Navigate to http://localhost:5500
@@ -471,34 +471,34 @@ Let's add a Statistics page to the Rabobank Case Summary tool.
    8. Generate a test report with pass/fail results
    ```
 
-### 4.2 GitHub Issue afhandelen
+### 4.2 Handle GitHub Issue
 
-1. Maak een nieuw issue in de GitHub-repository:
-   - **Titel**: `Add dark mode toggle for the Case Summary dashboard`
-   - **Beschrijving**: `Add a dark mode toggle button to the app header. It should switch between light and dark theme using CSS custom properties defined in variables.css. The preference should be stored in localStorage.`
-2. Wijs het issue toe aan **Copilot**
-3. Bekijk de automatisch gegenereerde PR en review de wijzigingen
+1. Create a new issue in the GitHub repository:
+   - **Title**: `Add dark mode toggle for the Case Summary dashboard`
+   - **Description**: `Add a dark mode toggle button to the app header. It should switch between light and dark theme using CSS custom properties defined in variables.css. The preference should be stored in localStorage.`
+2. Assign the issue to **Copilot**
+3. Review the automatically generated PR and review the changes
 
 ---
 
 ## Task 5 — GitHub Copilot CLI
 
-### 5.1 Installatie
+### 5.1 Installation
 
 ```bash
 npm install -g @githubnext/github-copilot-cli
 copilot --version
 ```
 
-### 5.2 Hands-on: Verbeter de Rabobank app
+### 5.2 Hands-on: Improve the Rabobank app
 
-1. **Start Copilot CLI vanuit de projectmap:**
+1. **Start Copilot CLI from the project folder:**
    ```bash
    cd "Project 1 - Rabobank case/frontend"
    copilot
    ```
 
-2. **Oefening 1 — Priority filter toevoegen:**
+2. **Exercise 1 — Add priority filter:**
    ```
    Add a priority filter dropdown to the case list sidebar in index.html.
    It should filter cases by priority (all, low, medium, high, critical).
@@ -506,7 +506,7 @@ copilot --version
    The filter should work independently from the existing status filter.
    ```
 
-3. **Oefening 2 — Export functionaliteit:**
+3. **Exercise 2 — Export functionality:**
    ```
    Add an "Export to CSV" button to the admin panel in admin.js.
    When clicked, it should export all currently visible search results
@@ -518,28 +518,28 @@ copilot --version
 
 ## 🔒 Security Guidelines
 
-In een bancaire omgeving gelden hoge veiligheidsnormen. Gebruik deze checklist bij elke Copilot-gegenereerde code:
+In a banking environment, high security standards apply. Use this checklist for every Copilot-generated code:
 
-| Risico | Wat te controleren |
-|--------|--------------------|
-| **XSS** | Gebruik nooit `innerHTML` met user-data — gebruik `textContent` of de DOM API |
-| **PII-blootstelling** | IBAN en BSN moeten worden gemaskeerd in de UI en logs |
-| **Client-side auth** | UI-hides zijn cosmetisch — autorisatie hoort server-side |
-| **Injection** | Zorg dat zoektermen niet als HTML of SQL worden geëvalueerd |
-| **Gevoelige data in localStorage** | Sla geen rollen, tokens, of PII op in localStorage |
+| Risk | What to check |
+|------|---------------|
+| **XSS** | Never use `innerHTML` with user data — use `textContent` or the DOM API |
+| **PII exposure** | IBAN and BSN must be masked in the UI and logs |
+| **Client-side auth** | UI hides are cosmetic — authorization belongs server-side |
+| **Injection** | Ensure search terms are not evaluated as HTML or SQL |
+| **Sensitive data in localStorage** | Do not store roles, tokens, or PII in localStorage |
 
-> Copilot begrijpt jouw autorisatiemodel niet. Beoordeel altijd gegenereerde beveiligingscode kritisch.
+> Copilot does not understand your authorization model. Always critically evaluate generated security code.
 
 ---
 
-## 📚 Reference: Lab ↔ Bestand Mapping
+## 📚 Reference: Lab ↔ File Mapping
 
-| Lab | Bestand | Leerdoel |
-|-----|---------|----------|
-| FE Lab 1 | `js/components/notification.js` | Component genereren & DOM API |
+| Lab | File | Learning Goal |
+|-----|------|---------------|
+| FE Lab 1 | `js/components/notification.js` | Generate component & DOM API |
 | FE Lab 2 | `js/components/case-card.js` | Refactoring: string concat → DOM API |
-| FE Lab 3 | `js/components/case-detail.js`, `js/utils/formatters.js` | Code review & documentatie |
-| FE Lab 4 | `js/components/admin.js` | XSS-detectie & veilige DOM-manipulatie |
+| FE Lab 3 | `js/components/case-detail.js`, `js/utils/formatters.js` | Code review & documentation |
+| FE Lab 4 | `js/components/admin.js` | XSS detection & safe DOM manipulation |
 | FE Lab 5 | `js/utils/formatters.js` (`calculatePriorityScore`) | Unit tests & bugfixing |
 | FE Lab 6 | `js/components/case-list.js` | Performance: DocumentFragment + debounce |
 
@@ -556,58 +556,58 @@ Rabobank customer service agents handle thousands of cases daily — complaints,
 
 ```
 project-1-rabobank-case/
-├── frontend/                        → Vanilla HTML/CSS/JS (geen build stap vereist)
+├── frontend/                        → Vanilla HTML/CSS/JS (no build step required)
 │   ├── index.html                   → App shell — header, sidebar, main, footer
 │   ├── css/
-│   │   ├── reset.css                → Minimale CSS reset
+│   │   ├── reset.css                → Minimal CSS reset
 │   │   ├── variables.css            → CSS custom properties (design tokens)
-│   │   └── styles.css               → Alle component- en layoutstijlen
+│   │   └── styles.css               → All component and layout styles
 │   ├── js/
-│   │   ├── app.js                   → Entry point — bootstrapt alles
-│   │   ├── state.js                 → Reactieve state store
-│   │   ├── api.js                   → Mock API-laag (retourneert Promises)
+│   │   ├── app.js                   → Entry point — bootstraps everything
+│   │   ├── state.js                 → Reactive state store
+│   │   ├── api.js                   → Mock API layer (returns Promises)
 │   │   ├── data.js                  → In-memory mock data (10 cases)
-│   │   ├── config.js                → Configuratie-instellingen
+│   │   ├── config.js                → Configuration settings
 │   │   ├── utils/
-│   │   │   └── formatters.js        → Datum-, IBAN- en prioriteithelpers
+│   │   │   └── formatters.js        → Date, IBAN, and priority helpers
 │   │   └── components/
 │   │       ├── notification.js      → Lab 1 — NotificationBanner stub
-│   │       ├── case-card.js         → Lab 2 — Legacy string concat (te refactoren)
-│   │       ├── case-list.js         → Lab 6 — Lijstrenderer (te optimaliseren)
-│   │       ├── case-detail.js       → Detailweergave met notitietijdlijn
-│   │       └── admin.js             → Lab 4 — XSS-kwetsbaar adminpaneel
+│   │       ├── case-card.js         → Lab 2 — Legacy string concat (to refactor)
+│   │       ├── case-list.js         → Lab 6 — List renderer (to optimize)
+│   │       ├── case-detail.js       → Detail view with note timeline
+│   │       └── admin.js             → Lab 4 — XSS-vulnerable admin panel
 │   └── data/
-│       └── cases.json               → Mock data als JSON (ter referentie)
+│       └── cases.json               → Mock data as JSON (for reference)
 │
 ├── backend/                         → Java 17 + Spring Boot 3
 │   ├── src/main/java/nl/rabobank/casesummary/
-│   │   ├── controller/              → REST-endpoints
-│   │   ├── service/                 → Bedrijfslogica
-│   │   ├── repository/              → Data-toegang (Spring Data JPA)
-│   │   ├── model/                   → JPA-entiteiten
+│   │   ├── controller/              → REST endpoints
+│   │   ├── service/                 → Business logic
+│   │   ├── repository/              → Data access (Spring Data JPA)
+│   │   ├── model/                   → JPA entities
 │   │   ├── dto/                     → Data transfer objects
-│   │   └── config/                  → CORS-configuratie en DataLoader
+│   │   └── config/                  → CORS configuration and DataLoader
 │   └── pom.xml
 │
 └── .github/
-    └── copilot-instructions.md      → Rabobank-codestandaarden voor Copilot
+    └── copilot-instructions.md      → Rabobank code standards for Copilot
 ```
 
 ## Getting started
 
 ### Frontend
 
-Geen installatie vereist. Open `frontend/index.html` via **VS Code Live Server**:
+No installation required. Open `frontend/index.html` via **VS Code Live Server**:
 
-1. Installeer de extensie **Live Server** in VS Code (indien nog niet aanwezig).
-2. Klik op `Go Live` in de statusbalk.
-3. De app is beschikbaar op `http://localhost:5500` (of `5501`).
+1. Install the **Live Server** extension in VS Code (if not already installed).
+2. Click `Go Live` in the status bar.
+3. The app is available at `http://localhost:5500` (or `5501`).
 
-> Of dubbelklik direct op `index.html`. Let op: ES modules vereisen een server — gebruik Live Server voor de volledige werking.
+> Or double-click directly on `index.html`. Note: ES modules require a server — use Live Server for full functionality.
 
 ### Backend
 
-Vereisten: **Java 17** en **Maven**.
+Requirements: **Java 17** and **Maven**.
 
 ```bash
 cd backend
@@ -615,7 +615,7 @@ mvn spring-boot:run   # http://localhost:8080
 ```
 
 - REST API: `http://localhost:8080/api/v1/cases`
-- H2-consolepagina: `http://localhost:8080/h2-console`
+- H2 console page: `http://localhost:8080/h2-console`
 
 ## How this connects to the labs
 
@@ -629,17 +629,17 @@ This project is your **sandbox**. Each lab exercise asks you to create or modify
 
 ## Lab exercise mapping
 
-| Lab | Bestand | Taak |
-|-----|---------|------|
-| FE L1 | `js/components/notification.js` | Implementeer `showNotification` met auto-dismiss |
-| FE L2 | `js/components/case-card.js` | Refactor string-concatenatie naar DOM API (XSS-veilig) |
-| FE L3 | `js/validate.js` (aan te maken) | Schrijf een formuliervalidatiemodule |
-| FE L4 | `js/components/admin.js` | Herstel XSS-kwetsbaarheden in het adminpaneel |
-| FE L5 | `js/utils/formatters.js` | Vind en herstel drie bugs in `calculatePriorityScore` |
-| FE L6 | `js/components/case-list.js` | Voeg debounce toe en gebruik `DocumentFragment` |
-| BE L1 | `controller/CaseController.java` | Nieuw REST-endpoint voor case summary CRUD |
-| BE L2 | `.github/copilot-instructions.md` | Maak teamstandaarden aan voor Copilot |
-| BE L3 | Architectuurdocumentatie | Genereer docs voor de case service |
-| BE L4 | `service/CaseService.java` | Herstel SQL-injectie in case-zoekfunctie |
-| BE L5 | Tests voor `CaseService` | Schrijf unit tests met JUnit 5 + Mockito |
-| BE L6 | Maandrapportgenerator | Verbeter de rapportlogica |
+| Lab | File | Task |
+|-----|------|------|
+| FE L1 | `js/components/notification.js` | Implement `showNotification` with auto-dismiss |
+| FE L2 | `js/components/case-card.js` | Refactor string concatenation to DOM API (XSS-safe) |
+| FE L3 | `js/validate.js` (to create) | Write a form validation module |
+| FE L4 | `js/components/admin.js` | Fix XSS vulnerabilities in the admin panel |
+| FE L5 | `js/utils/formatters.js` | Find and fix three bugs in `calculatePriorityScore` |
+| FE L6 | `js/components/case-list.js` | Add debounce and use `DocumentFragment` |
+| BE L1 | `controller/CaseController.java` | New REST endpoint for case summary CRUD |
+| BE L2 | `.github/copilot-instructions.md` | Create team standards for Copilot |
+| BE L3 | Architecture documentation | Generate docs for the case service |
+| BE L4 | `service/CaseService.java` | Fix SQL injection in case search function |
+| BE L5 | Tests for `CaseService` | Write unit tests with JUnit 5 + Mockito |
+| BE L6 | Monthly report generator | Improve the report logic |
