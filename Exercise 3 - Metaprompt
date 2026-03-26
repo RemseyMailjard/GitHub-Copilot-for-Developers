@@ -1,0 +1,48 @@
+# Exercise 3: Metaprompt for IBAN Validation
+# 
+# INSTRUCTIONS:
+# 1. Read the metaprompt below carefully
+# 2. Analyze what makes it effective for prompt engineering
+# 3. Implement the function based on the metaprompt
+# 4. Test with the provided examples
+
+"""
+METAPROMPT:
+You are an expert in international banking standards. Write a Python function 
+that validates International Bank Account Numbers (IBANs) with these constraints:
+- IBANs contain 2 letters (country code), followed by 2 digits (check digits)
+- Remaining characters are alphanumeric (country-specific format)
+- Total length varies: 15-34 characters
+- Check digits use mod-97 algorithm for validation
+
+The function should return True if valid, False otherwise.
+"""
+
+def validate_iban(iban: str) -> bool:
+    """
+    Validates an IBAN using the standard mod-97 algorithm.
+    
+    Args:
+        iban: The IBAN string to validate
+        
+    Returns:
+        bool: True if valid IBAN, False otherwise
+    """
+    # TODO: Implement based on the metaprompt above
+    pass
+
+
+# Test cases
+if __name__ == "__main__":
+    test_ibans = [
+        ("DE89370400440532013000", True),   # Valid German IBAN
+        ("GB82WEST12345698765432", True),   # Valid UK IBAN
+        ("FR1420041010050500013M02606", True),  # Valid French IBAN
+        ("INVALID1234567890", False),       # Invalid format
+        ("DE89370400440532013001", False),  # Invalid check digits
+    ]
+    
+    for iban, expected in test_ibans:
+        result = validate_iban(iban)
+        status = "✓" if result == expected else "✗"
+        print(f"{status} {iban}: {result}")
