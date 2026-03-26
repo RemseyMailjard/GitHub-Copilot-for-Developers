@@ -271,7 +271,7 @@ Custom instructions laten jou Copilot structureel aansturen zonder elke keer dez
 
 **Instructies:**
 1. Open `js/components/case-card.js`
-2. Selecteer alle code en klik rechtermuisknop → **Copilot** → **Review and Comment**
+2. Selecteer alle code en klik rechtermuisknop → **Copilot** → **Review**
 3. Bekijk de feedback — let op opmerkingen over `innerHTML`, string-concatenatie, en XSS
 4. Vraag Copilot Chat: _"What are the top 3 problems with this code from a security and maintainability perspective?"_
 5. Herhaal voor `js/utils/formatters.js` — Copilot zou de opzettelijke bugs moeten opmerken
@@ -400,7 +400,7 @@ Custom chat modes maken gespecialiseerde AI-assistenten voor specifieke taken.
 GitHub Copilot's agent mode kan zelfstandig over meerdere bestanden werken, fouten herkennen en zichzelf corrigeren.
 
 **Instructies:**
-1. Open Copilot Chat → kies **Agent mode** → selecteer **Claude Sonnet**
+1. Open Copilot Chat → kies **Agent mode** → selecteer **GPT 5.2**
 2. Zorg dat de frontend draait via Live Server
 3. Geef deze prompt mee:
 

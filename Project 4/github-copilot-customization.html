@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub Copilot Customization Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50:  '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    .gradient-hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
+    .card-glow:hover { box-shadow: 0 0 0 1px rgba(34,197,94,0.3), 0 8px 32px rgba(34,197,94,0.08); }
+    .badge-green { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+    .badge-blue  { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
+    .badge-yellow{ background: rgba(234,179,8,0.12); color: #facc15; border: 1px solid rgba(234,179,8,0.25); }
+    .badge-purple{ background: rgba(168,85,247,0.12); color: #c084fc; border: 1px solid rgba(168,85,247,0.25); }
+    .badge-orange{ background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.25); }
+    pre { scrollbar-width: thin; scrollbar-color: #334155 transparent; }
+    pre::-webkit-scrollbar { height: 4px; }
+    pre::-webkit-scrollbar-track { background: transparent; }
+    pre::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+    .tree-line { font-family: 'JetBrains Mono', monospace; }
+    .step-connector { background: linear-gradient(to bottom, #22c55e, transparent); }
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-[#0f172a] text-slate-200 font-sans antialiased">
+
+  <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
+  <nav class="sticky top-0 z-50 bg-[#0f172a]/90 backdrop-blur border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
+      <div class="flex items-center gap-2">
+        <!-- Copilot-ish icon -->
+        <svg class="w-6 h-6 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v4l3 3"/>
+        </svg>
+        <span class="font-semibold text-white text-sm">GitHub Copilot Customization</span>
+      </div>
+      <div class="hidden md:flex items-center gap-6 text-xs font-medium text-slate-400">
+        <a href="#decision-tree"    class="hover:text-brand-400 transition-colors">Decision Tree</a>
+        <a href="#type1"            class="hover:text-brand-400 transition-colors">Instructions</a>
+        <a href="#type2"            class="hover:text-brand-400 transition-colors">Path-Specific</a>
+        <a href="#type3"            class="hover:text-brand-400 transition-colors">Prompts</a>
+        <a href="#type4"            class="hover:text-brand-400 transition-colors">Skills</a>
+        <a href="#type5"            class="hover:text-brand-400 transition-colors">Agents</a>
+        <a href="#comparison"       class="hover:text-brand-400 transition-colors">Comparison</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
+  <header class="gradient-hero py-20 px-4 text-center relative overflow-hidden">
+    <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 25% 50%, #22c55e 0%, transparent 60%), radial-gradient(circle at 75% 50%, #3b82f6 0%, transparent 60%);"></div>
+    <div class="relative max-w-4xl mx-auto">
+      <div class="inline-flex items-center gap-2 badge-green rounded-full px-3 py-1 text-xs font-medium mb-6">
+        <!-- Target icon -->
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        GitHub Copilot Customization Guide
+      </div>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-4 tracking-tight">
+        When to Use<br/>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-blue-400">Instructions, Prompts, Skills &amp; Agents</span>
+      </h1>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+        A complete reference for choosing the right customization type — so Copilot always knows your project, your standards, and your workflow.
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+
+    <!-- ─── DECISION TREE ─────────────────────────────────────────────── -->
+    <section id="decision-tree">
+      <div class="flex items-center gap-3 mb-10">
+        <!-- Tree icon -->
+        <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-white">Quick Decision Tree</h2>
+          <p class="text-slate-400 text-sm">Start here when deciding which customization type to use</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8">
+        <div class="space-y-4 max-w-2xl">
+
+          <!-- Step 1 -->
+          <div class="flex gap-4">
+            <div class="flex flex-col items-center">
+              <div class="w-8 h-8 rounded-full bg-brand-500/20 border border-brand-500/40 flex items-center justify-center flex-shrink-0">
+                <span class="text-brand-400 text-xs font-bold">1</span>
+              </div>
+              <div class="w-px flex-1 step-connector mt-2"></div>
+            </div>
+            <div class="pb-6 flex-1">
+              <p class="text-slate-300 font-medium mb-1">Should this apply to <span class="text-white font-semibold">EVERY</span> interaction?</p>
+              <p class="text-slate-500 text-sm mb-3">Think: coding standards, project conventions, response style preferences</p>
+              <div class="flex items-start gap-2">
+                <span class="badge-green rounded px-2 py-0.5 text-xs font-medium flex-shrink-0 mt-0.5">YES →</span>
+                <div>
+                  <p class="text-brand-400 font-semibold text-sm">Use: <code class="bg-slate-800 px-1.5 py-0.5 rounded text-brand-300">.github/copilot-instructions.md</code></p>
+                  <p class="text-slate-500 text-xs mt-0.5">Always loaded, applies universally across the entire repository</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex gap-4">
+            <div class="flex flex-col items-center">
+              <div class="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center flex-shrink-0">
+                <span class="text-blue-400 text-xs font-bold">2</span>
+              </div>
+              <div class="w-px flex-1 step-connector mt-2"></div>
+            </div>
+            <div class="pb-6 flex-1">
+              <p class="text-slate-300 font-medium mb-1">Should it apply only to <span class="text-white font-semibold">SPECIFIC</span> file types or directories?</p>
+              <p class="text-slate-500 text-sm mb-3">Think: Python rules for .py files, React conventions for components/</p>
+              <div class="flex items-start gap-2">
+                <span class="badge-blue rounded px-2 py-0.5 text-xs font-medium flex-shrink-0 mt-0.5">YES →</span>
+                <div>
+                  <p class="text-blue-400 font-semibold text-sm">Use: <code class="bg-slate-800 px-1.5 py-0.5 rounded text-blue-300">.github/instructions/*.instructions.md</code></p>
+                  <p class="text-slate-500 text-xs mt-0.5">Conditionally loaded based on applyTo glob patterns</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex gap-4">
+            <div class="flex flex-col items-center">
+              <div class="w-8 h-8 rounded-full bg-yellow-500/20 border border-yellow-500/40 flex items-center justify-center flex-shrink-0">
+                <span class="text-yellow-400 text-xs font-bold">3</span>
+              </div>
+              <div class="w-px flex-1 step-connector mt-2"></div>
+            </div>
+            <div class="pb-6 flex-1">
+              <p class="text-slate-300 font-medium mb-1">Is it a <span class="text-white font-semibold">REUSABLE</span> task you'll invoke manually?</p>
+              <p class="text-slate-500 text-sm mb-3">Think: scaffolding components, generating tests, code reviews</p>
+              <div class="flex items-start gap-2">
+                <span class="badge-yellow rounded px-2 py-0.5 text-xs font-medium flex-shrink-0 mt-0.5">YES →</span>
+                <div>
+                  <p class="text-yellow-400 font-semibold text-sm">Use: <code class="bg-slate-800 px-1.5 py-0.5 rounded text-yellow-300">.github/prompts/*.prompt.md</code></p>
+                  <p class="text-slate-500 text-xs mt-0.5">Loaded only when you type /prompt-name</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="flex gap-4">
+            <div class="flex flex-col items-center">
+              <div class="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/40 flex items-center justify-center flex-shrink-0">
+                <span class="text-purple-400 text-xs font-bold">4</span>
+              </div>
+              <div class="w-px flex-1 step-connector mt-2"></div>
+            </div>
+            <div class="pb-6 flex-1">
+              <p class="text-slate-300 font-medium mb-1">Is it a <span class="text-white font-semibold">COMPLEX</span> workflow with scripts/resources?</p>
+              <p class="text-slate-500 text-sm mb-3">Think: debugging CI/CD, security reviews, multi-step processes</p>
+              <div class="flex items-start gap-2">
+                <span class="badge-purple rounded px-2 py-0.5 text-xs font-medium flex-shrink-0 mt-0.5">YES →</span>
+                <div>
+                  <p class="text-purple-400 font-semibold text-sm">Use: <code class="bg-slate-800 px-1.5 py-0.5 rounded text-purple-300">.github/skills/*/SKILL.md</code></p>
+                  <p class="text-slate-500 text-xs mt-0.5">Auto-loaded when description matches, includes bundled resources</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="flex gap-4">
+            <div class="flex flex-col items-center">
+              <div class="w-8 h-8 rounded-full bg-orange-500/20 border border-orange-500/40 flex items-center justify-center flex-shrink-0">
+                <span class="text-orange-400 text-xs font-bold">5</span>
+              </div>
+            </div>
+            <div class="flex-1">
+              <p class="text-slate-300 font-medium mb-1">Is it a <span class="text-white font-semibold">PERSISTENT</span> persona for specific workflows?</p>
+              <p class="text-slate-500 text-sm mb-3">Think: "Frontend Expert", "Security Reviewer", "Bug Hunter"</p>
+              <div class="flex items-start gap-2">
+                <span class="badge-orange rounded px-2 py-0.5 text-xs font-medium flex-shrink-0 mt-0.5">YES →</span>
+                <div>
+                  <p class="text-orange-400 font-semibold text-sm">Use: <span class="bg-slate-800 px-1.5 py-0.5 rounded text-orange-300 font-mono text-xs">Custom Agent</span></p>
+                  <p class="text-slate-500 text-xs mt-0.5">Explicitly selected, orchestrates multiple skills and tools</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── TYPE CARDS GRID ───────────────────────────────────────────── -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Card 1 -->
+      <a href="#type1" class="group bg-slate-900 border border-slate-800 rounded-2xl p-6 card-glow transition-all duration-300 hover:-translate-y-1">
+        <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <span class="badge-green rounded-full px-2 py-0.5 text-xs font-medium">Always Active</span>
+        <h3 class="text-white font-bold text-lg mt-3 mb-1">Repository Instructions</h3>
+        <p class="text-slate-400 text-sm"><code class="text-brand-300">.github/copilot-instructions.md</code></p>
+        <p class="text-slate-500 text-xs mt-2">Universal standards, tech stack, coding style, response preferences</p>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="#type2" class="group bg-slate-900 border border-slate-800 rounded-2xl p-6 card-glow transition-all duration-300 hover:-translate-y-1">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <span class="badge-blue rounded-full px-2 py-0.5 text-xs font-medium">File Match</span>
+        <h3 class="text-white font-bold text-lg mt-3 mb-1">Path-Specific Instructions</h3>
+        <p class="text-slate-400 text-sm"><code class="text-blue-300">.github/instructions/*.instructions.md</code></p>
+        <p class="text-slate-500 text-xs mt-2">Language rules, area conventions, test patterns via applyTo globs</p>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="#type3" class="group bg-slate-900 border border-slate-800 rounded-2xl p-6 card-glow transition-all duration-300 hover:-translate-y-1">
+        <div class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <span class="badge-yellow rounded-full px-2 py-0.5 text-xs font-medium">On Command</span>
+        <h3 class="text-white font-bold text-lg mt-3 mb-1">Prompt Files</h3>
+        <p class="text-slate-400 text-sm"><code class="text-yellow-300">.github/prompts/*.prompt.md</code></p>
+        <p class="text-slate-500 text-xs mt-2">Scaffolding, reviews, documentation generation — invoke with /name</p>
+      </a>
+
+      <!-- Card 4 -->
+      <a href="#type4" class="group bg-slate-900 border border-slate-800 rounded-2xl p-6 card-glow transition-all duration-300 hover:-translate-y-1">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="badge-purple rounded-full px-2 py-0.5 text-xs font-medium">Semantic Match</span>
+        <h3 class="text-white font-bold text-lg mt-3 mb-1">Agent Skills</h3>
+        <p class="text-slate-400 text-sm"><code class="text-purple-300">.github/skills/*/SKILL.md</code></p>
+        <p class="text-slate-500 text-xs mt-2">CI/CD, security, complex processes with bundled scripts &amp; references</p>
+      </a>
+
+      <!-- Card 5 -->
+      <a href="#type5" class="group bg-slate-900 border border-slate-800 rounded-2xl p-6 card-glow transition-all duration-300 hover:-translate-y-1">
+        <div class="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-orange-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        </div>
+        <span class="badge-orange rounded-full px-2 py-0.5 text-xs font-medium">Explicit Select</span>
+        <h3 class="text-white font-bold text-lg mt-3 mb-1">Custom Agents</h3>
+        <p class="text-slate-400 text-sm"><code class="text-orange-300">UI Configuration</code></p>
+        <p class="text-slate-500 text-xs mt-2">Frontend Expert, Bug Hunter — persistent personas for entire sessions</p>
+      </a>
+
+      <!-- Card Tip -->
+      <div class="bg-gradient-to-br from-brand-900/30 to-blue-900/20 border border-brand-800/40 rounded-2xl p-6">
+        <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <h3 class="text-white font-bold text-lg mb-2">Pro Tip</h3>
+        <p class="text-slate-400 text-sm">Path-specific instructions <span class="text-white font-medium">combine</span> with repository-wide instructions. Editing <code class="text-brand-300 text-xs">Button.tsx</code>? Both <code class="text-brand-300 text-xs">copilot-instructions.md</code> <em>and</em> <code class="text-brand-300 text-xs">react.instructions.md</code> are loaded together.</p>
+      </div>
+    </div>
+
+    <!-- ─── TYPE 1 ─────────────────────────────────────────────────────── -->
+    <section id="type1" class="scroll-mt-20">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500 text-sm font-medium">📁 Type 1</span>
+            <span class="badge-green rounded-full px-2 py-0.5 text-xs font-medium">Always Active</span>
+          </div>
+          <h2 class="text-2xl font-bold text-white">Repository-Wide Instructions</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <h3 class="text-brand-400 font-semibold mb-4 flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            When to Use
+          </h3>
+          <div class="space-y-4">
+            <div class="flex gap-3">
+              <div class="w-1.5 h-1.5 rounded-full bg-brand-400 flex-shrink-0 mt-2"></div>
+              <div>
+                <p class="text-white text-sm font-medium">Project Overview</p>
+                <p class="text-slate-500 text-xs">"Copilot doesn't understand our architecture" → Explain tech stack, folder structure, service communication</p>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-1.5 h-1.5 rounded-full bg-brand-400 flex-shrink-0 mt-2"></div>
+              <div>
+                <p class="text-white text-sm font-medium">Coding Standards</p>
+                <p class="text-slate-500 text-xs">"Generated code doesn't follow our conventions" → Naming, code style, linting rules</p>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-1.5 h-1.5 rounded-full bg-brand-400 flex-shrink-0 mt-2"></div>
+              <div>
+                <p class="text-white text-sm font-medium">Build/Test Commands</p>
+                <p class="text-slate-500 text-xs">"Copilot suggests wrong build commands" → Build, test, deploy, common commands</p>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-1.5 h-1.5 rounded-full bg-brand-400 flex-shrink-0 mt-2"></div>
+              <div>
+                <p class="text-white text-sm font-medium">Response Style</p>
+                <p class="text-slate-500 text-xs">"Copilot's answers are too verbose" → Response length, formatting, tone</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <h3 class="text-brand-400 font-semibold mb-4 flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+            Properties
+          </h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-slate-800 rounded-lg p-3">
+              <p class="text-slate-500 text-xs mb-1">Loading</p>
+              <p class="text-white text-sm font-medium">Always Automatic</p>
+            </div>
+            <div class="bg-slate-800 rounded-lg p-3">
+              <p class="text-slate-500 text-xs mb-1">Scope</p>
+              <p class="text-white text-sm font-medium">Entire repository</p>
+            </div>
+            <div class="bg-slate-800 rounded-lg p-3">
+              <p class="text-slate-500 text-xs mb-1">Best For</p>
+              <p class="text-white text-sm font-medium">Universal standards</p>
+            </div>
+            <div class="bg-slate-800 rounded-lg p-3">
+              <p class="text-slate-500 text-xs mb-1">Priority</p>
+              <p class="text-white text-sm font-medium">Medium</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
+          <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
+          <span class="text-slate-400 text-xs font-mono ml-2">.github/copilot-instructions.md — E-commerce Platform Example</span>
+        </div>
+        <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-slate-500"># .github/copilot-instructions.md</span>
+
+<span class="text-brand-400"># Project Overview</span>
+Multi-tenant e-commerce platform built with Next.js, TypeScript, and Prisma.
+Microservices architecture: API Gateway → Services → PostgreSQL.
+
+<span class="text-brand-400"># Tech Stack</span>
+<span class="text-blue-300">- Frontend:</span> Next.js 14, React 18, Tailwind CSS
+<span class="text-blue-300">- Backend:</span>  Node.js, Express, Prisma ORM
+<span class="text-blue-300">- Database:</span> PostgreSQL 15
+<span class="text-blue-300">- Testing:</span>  Jest, React Testing Library, Playwright
+
+<span class="text-brand-400"># Universal Coding Standards</span>
+- Use TypeScript strict mode
+- All functions must have JSDoc comments
+- Prefer async/await over promises
+- Use early returns for error handling
+- Follow Airbnb style guide
+
+<span class="text-brand-400"># Build Commands</span>
+- Development: <span class="text-yellow-300">`npm run dev`</span>
+- Build:       <span class="text-yellow-300">`npm run build`</span>
+- Test:        <span class="text-yellow-300">`npm test`</span>
+- Lint:        <span class="text-yellow-300">`npm run lint`</span>
+
+<span class="text-brand-400"># Response Preferences</span>
+- Keep responses concise (under 10 lines when possible)
+- Show code examples before explanations
+- Use TypeScript, not JavaScript</code></pre>
+      </div>
+    </section>
+
+    <!-- ─── TYPE 2 ─────────────────────────────────────────────────────── -->
+    <section id="type2" class="scroll-mt-20">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500 text-sm font-medium">🎯 Type 2</span>
+            <span class="badge-blue rounded-full px-2 py-0.5 text-xs font-medium">File Match</span>
+          </div>
+          <h2 class="text-2xl font-bold text-white">Path-Specific Instructions</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <p class="text-blue-400 text-xs font-medium mb-1">Language-Specific</p>
+          <p class="text-white text-sm font-medium">Python vs TypeScript</p>
+          <p class="text-slate-500 text-xs mt-1">Separate instruction files per language</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <p class="text-blue-400 text-xs font-medium mb-1">Frontend vs Backend</p>
+          <p class="text-white text-sm font-medium">API vs UI patterns</p>
+          <p class="text-slate-500 text-xs mt-1">src/api/ vs src/components/</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <p class="text-blue-400 text-xs font-medium mb-1">Testing</p>
+          <p class="text-white text-sm font-medium">**/*.test.* files</p>
+          <p class="text-slate-500 text-xs mt-1">RTL assertions, test patterns</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <p class="text-blue-400 text-xs font-medium mb-1">Legacy Code</p>
+          <p class="text-white text-sm font-medium">legacy/ folder</p>
+          <p class="text-slate-500 text-xs mt-1">Bug fixes only, no refactoring</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
+          <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
+          <span class="text-slate-400 text-xs font-mono ml-2">Monorepo examples — react + python + testing</span>
+        </div>
+        <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-slate-500"># .github/instructions/react.instructions.md</span>
+<span class="text-purple-300">---
+applyTo: "src/components/**/*.tsx,src/pages/**/*.tsx"
+---</span>
+
+<span class="text-brand-400"># React Component Guidelines</span>
+- Use functional components with hooks (no class components)
+- Prop types with TypeScript interfaces
+- Tailwind for styling (no CSS modules)
+- <span class="text-blue-300">React.memo</span> for performance-sensitive components
+- Accessibility: all interactive elements need aria-labels
+
+
+<span class="text-slate-500"># .github/instructions/python-api.instructions.md</span>
+<span class="text-purple-300">---
+applyTo: "services/api/**/*.py"
+---</span>
+
+<span class="text-brand-400"># Python API Guidelines</span>
+- FastAPI for all endpoints
+- Pydantic models for request/response validation
+- <span class="text-blue-300">async def</span> for all routes
+- Dependency injection for database connections
+- OpenAPI documentation with detailed descriptions
+
+
+<span class="text-slate-500"># .github/instructions/testing.instructions.md</span>
+<span class="text-purple-300">---
+applyTo: "**/__tests__/**/*.ts,**/*.test.tsx,**/*.spec.py"
+---</span>
+
+<span class="text-brand-400"># Testing Standards</span>
+- Use React Testing Library (no Enzyme)
+- Prefer <span class="text-yellow-300">data-testid</span> over class selectors
+- Mock external services and APIs
+- Test user-visible behavior, not implementation
+- Each test should be independent</code></pre>
+      </div>
+    </section>
+
+    <!-- ─── TYPE 3 ─────────────────────────────────────────────────────── -->
+    <section id="type3" class="scroll-mt-20">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500 text-sm font-medium">⚡ Type 3</span>
+            <span class="badge-yellow rounded-full px-2 py-0.5 text-xs font-medium">On Command</span>
+          </div>
+          <h2 class="text-2xl font-bold text-white">Prompt Files</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <code class="text-yellow-300 text-xs">/new-component</code>
+          <p class="text-white text-sm font-medium mt-1">Component Scaffolding</p>
+          <p class="text-slate-500 text-xs mt-1">React components with tests, consistent structure</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <code class="text-yellow-300 text-xs">/security-review</code>
+          <p class="text-white text-sm font-medium mt-1">Code Reviews</p>
+          <p class="text-slate-500 text-xs mt-1">Security/performance review checklist</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <code class="text-yellow-300 text-xs">/generate-docs</code>
+          <p class="text-white text-sm font-medium mt-1">Documentation</p>
+          <p class="text-slate-500 text-xs mt-1">Generate API docs in specific format</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <code class="text-yellow-300 text-xs">/create-tests</code>
+          <p class="text-white text-sm font-medium mt-1">Test Generation</p>
+          <p class="text-slate-500 text-xs mt-1">Unit tests with arrange-act-assert pattern</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
+            <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
+            <span class="text-slate-400 text-xs font-mono ml-2">new-react-component.prompt.md</span>
+          </div>
+          <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-purple-300">---
+agent: 'agent'
+model: Claude Sonnet 4
+description: 'Generate a new React component with tests'
+---</span>
+
+<span class="text-brand-400"># Create React Component</span>
+Generate a new React component:
+
+<span class="text-blue-300">Component Name:</span> <span class="text-yellow-300">${input:componentName:Enter component name}</span>
+<span class="text-blue-300">Component Type:</span> <span class="text-yellow-300">${input:componentType:atom/molecule/organism}</span>
+
+<span class="text-brand-400">Requirements:</span>
+1. Create in <span class="text-yellow-300">src/components/${input:componentType}s/</span>
+2. TypeScript with strict typing
+3. Props interface
+4. JSDoc comments
+5. Create test file with RTL
+6. Include Storybook story
+
+<span class="text-brand-400">Files to create:</span>
+- <span class="text-yellow-300">${input:componentName}.tsx</span>
+- <span class="text-yellow-300">${input:componentName}.test.tsx</span>
+- <span class="text-yellow-300">${input:componentName}.stories.tsx</span></code></pre>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
+            <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
+            <span class="text-slate-400 text-xs font-mono ml-2">api-security-review.prompt.md</span>
+          </div>
+          <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-purple-300">---
+agent: 'agent'
+description: 'Security review for API endpoints'
+---</span>
+
+<span class="text-brand-400"># API Security Review</span>
+Review the selected API code for vulnerabilities:
+
+<span class="text-red-400">1. Authentication/Authorization</span>
+   - Proper token validation
+   - Role-based access control
+   - Session management
+
+<span class="text-red-400">2. Input Validation</span>
+   - SQL injection risks
+   - XSS vulnerabilities
+   - Command injection
+
+<span class="text-red-400">3. Data Exposure</span>
+   - Sensitive data in responses
+   - Error message information leakage
+   - Logging of secrets
+
+<span class="text-red-400">4. Rate Limiting</span>
+   - Endpoint protection
+   - DDoS mitigation
+
+Provide line numbers and remediation steps.</code></pre>
+        </div>
+      </div>
+
+      <div class="mt-4 bg-yellow-900/20 border border-yellow-800/40 rounded-xl p-4 flex gap-3">
+        <svg class="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <p class="text-yellow-200 text-sm">In Copilot Chat, type <code class="bg-slate-800 px-1.5 py-0.5 rounded text-yellow-300">/new-react-component</code> and you'll be prompted for the component name and type. The prompt file guides Copilot to generate everything according to your standards.</p>
+      </div>
+    </section>
+
+    <!-- ─── TYPE 4 ─────────────────────────────────────────────────────── -->
+    <section id="type4" class="scroll-mt-20">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500 text-sm font-medium">🎓 Type 4</span>
+            <span class="badge-purple rounded-full px-2 py-0.5 text-xs font-medium">Semantic Match</span>
+          </div>
+          <h2 class="text-2xl font-bold text-white">Agent Skills</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <p class="text-purple-400 text-xs font-medium mb-1">CI/CD Debugging</p>
+          <p class="text-white text-sm font-medium">github-actions-debugging</p>
+          <p class="text-slate-500 text-xs mt-1">Multi-step log analysis and fixes</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <p class="text-purple-400 text-xs font-medium mb-1">Database Migrations</p>
+          <p class="text-white text-sm font-medium">database-migration</p>
+          <p class="text-slate-500 text-xs mt-1">Migration scripts, rollback procedures</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <p class="text-purple-400 text-xs font-medium mb-1">Performance</p>
+          <p class="text-white text-sm font-medium">performance-analyzer</p>
+          <p class="text-slate-500 text-xs mt-1">Profiling scripts, benchmark data</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <p class="text-purple-400 text-xs font-medium mb-1">Security</p>
+          <p class="text-white text-sm font-medium">security-audit</p>
+          <p class="text-slate-500 text-xs mt-1">Scanning tools, vulnerability databases</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
+            <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
+            <span class="text-slate-400 text-xs font-mono ml-2">.github/skills/github-actions-debugging/SKILL.md</span>
+          </div>
+          <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-purple-300">---
+name: github-actions-debugging
+description: Debug failing GitHub Actions workflows. Use when
+  CI/CD fails, builds break, or Actions need troubleshooting.
+---</span>
+
+<span class="text-brand-400"># Debugging Process</span>
+
+<span class="text-blue-300">1. Identify the failure</span>
+   - Check workflow run status
+   - Identify failed job and step
+   - Review error messages
+
+<span class="text-blue-300">2. Analyze logs</span>
+   - Use <span class="text-yellow-300">scripts/extract-error.sh</span> to parse logs
+   - Check <span class="text-yellow-300">references/common-errors.md</span>
+   - Check environment variables and secrets
+
+<span class="text-blue-300">3. Common Issues &amp; Fixes</span>
+   
+   Issue: Missing dependencies
+   - Check package.json/requirements.txt changes
+   - Run <span class="text-yellow-300">`scripts/validate-deps.sh`</span>
+
+   Issue: Permission errors
+   - Check GITHUB_TOKEN permissions
+   - Use <span class="text-yellow-300">`scripts/check-permissions.sh`</span>
+
+<span class="text-blue-300">4. Fix and validate</span>
+   - Apply fix locally first
+   - Test with act (GitHub Actions local runner)
+   - Push and monitor workflow
+
+<span class="text-brand-400"># Available Resources</span>
+- <span class="text-yellow-300">scripts/extract-error.sh</span>    - Parse workflow logs
+- <span class="text-yellow-300">scripts/check-permissions.sh</span> - Validate token perms
+- <span class="text-yellow-300">references/common-errors.md</span>  - Known issues</code></pre>
+        </div>
+
+        <div class="space-y-4">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <h4 class="text-purple-400 font-semibold text-sm mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              Directory Structure
+            </h4>
+            <pre class="text-xs font-mono text-slate-400 leading-relaxed tree-line"><code>.github/skills/
+└── github-actions-debugging/
+    ├── <span class="text-white">SKILL.md</span>
+    ├── scripts/
+    │   ├── extract-error.sh
+    │   ├── check-permissions.sh
+    │   └── validate-deps.sh
+    ├── references/
+    │   ├── common-errors.md
+    │   ├── workflow-patterns.md
+    │   └── test-data/
+    └── examples/
+        └── fixed-workflow.yml</code></pre>
+          </div>
+          <div class="bg-purple-900/20 border border-purple-800/40 rounded-xl p-4">
+            <h4 class="text-purple-300 font-semibold text-sm mb-2">How it activates</h4>
+            <div class="space-y-2 text-xs text-slate-400">
+              <div class="flex gap-2"><span class="text-purple-400 font-bold">1.</span> Query is semantically matched</div>
+              <div class="flex gap-2"><span class="text-purple-400 font-bold">2.</span> SKILL.md loads automatically</div>
+              <div class="flex gap-2"><span class="text-purple-400 font-bold">3.</span> Scripts become executable</div>
+              <div class="flex gap-2"><span class="text-purple-400 font-bold">4.</span> References are available as context</div>
+            </div>
+          </div>
+          <div class="bg-slate-900 border border-yellow-800/40 rounded-xl p-4">
+            <p class="text-yellow-300 text-xs font-semibold mb-1">
+              <svg class="w-3.5 h-3.5 inline mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Key Difference from Prompts
+            </p>
+            <p class="text-slate-400 text-xs">Skills are <span class="text-white">automatic</span> and include <span class="text-white">bundled resources</span>. Prompts are <span class="text-white">manual</span> and are just text templates.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── TYPE 5 ─────────────────────────────────────────────────────── -->
+    <section id="type5" class="scroll-mt-20">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-orange-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500 text-sm font-medium">🤖 Type 5</span>
+            <span class="badge-orange rounded-full px-2 py-0.5 text-xs font-medium">Explicit Select</span>
+          </div>
+          <h2 class="text-2xl font-bold text-white">Custom Agents</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center mb-2">
+            <svg class="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
+          </div>
+          <p class="text-white text-sm font-medium">Frontend Expert</p>
+          <p class="text-slate-500 text-xs mt-1">React/TypeScript/Accessibility specialist</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="w-8 h-8 rounded-full bg-red-500/20 border border-red-500/30 flex items-center justify-center mb-2">
+            <svg class="w-4 h-4 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <p class="text-white text-sm font-medium">Bug Hunter</p>
+          <p class="text-slate-500 text-xs mt-1">Quality and edge case focus</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="w-8 h-8 rounded-full bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center mb-2">
+            <svg class="w-4 h-4 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <p class="text-white text-sm font-medium">Security Reviewer</p>
+          <p class="text-slate-500 text-xs mt-1">Security-focused code examination</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="w-8 h-8 rounded-full bg-brand-500/20 border border-brand-500/30 flex items-center justify-center mb-2">
+            <svg class="w-4 h-4 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <p class="text-white text-sm font-medium">Mentor</p>
+          <p class="text-slate-500 text-xs mt-1">Onboarding junior developers</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
+          <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
+          <span class="text-slate-400 text-xs font-mono ml-2">Frontend Expert — Custom Agent Configuration</span>
+        </div>
+        <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-brand-400">## Behavior</span>
+You are a frontend development expert specializing in:
+- React 18+ best practices
+- TypeScript strict mode
+- Web accessibility (WCAG 2.1)
+- Performance optimization
+- Modern CSS (Tailwind/CSS Modules)
+
+<span class="text-brand-400">## Approach</span>
+1. Always consider component reusability
+2. Prioritize accessibility in every suggestion
+3. Optimize for performance (lazy loading, memoization)
+4. Use semantic HTML
+5. Consider mobile-first responsive design
+
+<span class="text-brand-400">## When helping with code:</span>
+- Suggest TypeScript interfaces for props
+- Add <span class="text-yellow-300">aria-labels</span> and roles
+- Recommend <span class="text-blue-300">React.memo</span> for heavy components
+- Point out potential accessibility issues
+- Suggest Lighthouse audits for performance
+
+<span class="text-brand-400">## Skills to use:</span>
+- react-component-generator
+- accessibility-checker
+- performance-analyzer</code></pre>
+      </div>
+
+      <div class="mt-4 bg-orange-900/20 border border-orange-800/40 rounded-xl p-4 flex gap-3">
+        <svg class="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <p class="text-orange-200 text-sm">Unlike skills that activate automatically for specific tasks, agents are <span class="text-white font-medium">personas you select</span> that maintain consistent behavior across an <span class="text-white font-medium">entire session</span>. They can orchestrate multiple skills and have persistent priorities.</p>
+      </div>
+    </section>
+
+    <!-- ─── COMPLETE SETUP ────────────────────────────────────────────── -->
+    <section id="setup">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-white">Real-World Complete Setup</h2>
+          <p class="text-slate-400 text-sm">SaaS Platform with Microservices</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
+            <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
+            <span class="text-slate-400 text-xs font-mono ml-2">Repository Structure</span>
+          </div>
+          <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed tree-line"><code>.github/
+├── <span class="text-brand-400">copilot-instructions.md</span>    <span class="text-slate-500"># ALWAYS LOADED</span>
+│
+├── instructions/               <span class="text-slate-500"># CONDITIONAL</span>
+│   ├── <span class="text-blue-300">python-api.instructions.md</span>
+│   ├── <span class="text-blue-300">react-frontend.instructions.md</span>
+│   ├── <span class="text-blue-300">testing.instructions.md</span>
+│   └── <span class="text-blue-300">migrations.instructions.md</span>
+│
+├── prompts/                    <span class="text-slate-500"># MANUAL /command</span>
+│   ├── <span class="text-yellow-300">new-api-endpoint.prompt.md</span>
+│   ├── <span class="text-yellow-300">new-component.prompt.md</span>
+│   ├── <span class="text-yellow-300">generate-migration.prompt.md</span>
+│   └── <span class="text-yellow-300">code-review.prompt.md</span>
+│
+└── skills/                     <span class="text-slate-500"># AUTOMATIC semantic</span>
+    ├── github-actions-debug/
+    │   ├── <span class="text-purple-300">SKILL.md</span>
+    │   ├── scripts/
+    │   └── references/
+    ├── performance-optimization/
+    │   ├── <span class="text-purple-300">SKILL.md</span>
+    │   ├── scripts/
+    │   └── benchmarks/
+    └── security-audit/
+        ├── <span class="text-purple-300">SKILL.md</span>
+        ├── scripts/
+        └── references/</code></pre>
+        </div>
+
+        <div class="space-y-4">
+          <h3 class="text-white font-semibold text-sm">Usage Scenarios</h3>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <p class="text-white text-sm font-semibold mb-2 flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-brand-500/20 text-brand-400 text-xs flex items-center justify-center font-bold">1</span>
+              Adding New API Endpoint
+            </p>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <code>copilot-instructions.md</code> (always)
+              </div>
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <code>python-api.instructions.md</code> (file is .py)
+              </div>
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-yellow-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Type <code>/new-api-endpoint</code> for scaffolding
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <p class="text-white text-sm font-semibold mb-2 flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center font-bold">2</span>
+              Debugging Failed CI
+            </p>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <code>copilot-instructions.md</code> (always)
+              </div>
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
+                <code>github-actions-debug</code> skill (semantic match)
+              </div>
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                Can execute scripts, reference docs
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <p class="text-white text-sm font-semibold mb-2 flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-bold">3</span>
+              Building React Component
+            </p>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <code>copilot-instructions.md</code> (always)
+              </div>
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <code>react-frontend.instructions.md</code> (file is .tsx)
+              </div>
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-orange-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+                Select "Frontend Expert" agent for session
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <p class="text-white text-sm font-semibold mb-2 flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-yellow-500/20 text-yellow-400 text-xs flex items-center justify-center font-bold">4</span>
+              Writing Tests
+            </p>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <code>copilot-instructions.md</code> (always)
+              </div>
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <code>testing.instructions.md</code> (file is .test.tsx)
+              </div>
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <code>react-frontend.instructions.md</code> (also .tsx)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── COMPARISON TABLE ──────────────────────────────────────────── -->
+    <section id="comparison" class="scroll-mt-20">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-slate-700 border border-slate-600 flex items-center justify-center">
+          <svg class="w-5 h-5 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-white">Complete Comparison</h2>
+          <p class="text-slate-400 text-sm">All five types side by side</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-slate-800">
+        <table class="w-full text-sm min-w-[700px]">
+          <thead>
+            <tr class="bg-slate-800/80 border-b border-slate-700">
+              <th class="text-left px-5 py-4 text-slate-400 font-semibold text-xs uppercase tracking-wide">Feature</th>
+              <th class="text-left px-4 py-4 text-brand-400 font-semibold text-xs uppercase tracking-wide">Repo Instructions</th>
+              <th class="text-left px-4 py-4 text-blue-400 font-semibold text-xs uppercase tracking-wide">Path-Specific</th>
+              <th class="text-left px-4 py-4 text-yellow-400 font-semibold text-xs uppercase tracking-wide">Prompt Files</th>
+              <th class="text-left px-4 py-4 text-purple-400 font-semibold text-xs uppercase tracking-wide">Skills</th>
+              <th class="text-left px-4 py-4 text-orange-400 font-semibold text-xs uppercase tracking-wide">Custom Agents</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            <tr class="bg-slate-900 hover:bg-slate-800/40 transition-colors">
+              <td class="px-5 py-3.5 text-slate-400 font-medium text-xs">File Pattern</td>
+              <td class="px-4 py-3.5"><code class="text-brand-300 text-xs">copilot-instructions.md</code></td>
+              <td class="px-4 py-3.5"><code class="text-blue-300 text-xs">*.instructions.md</code></td>
+              <td class="px-4 py-3.5"><code class="text-yellow-300 text-xs">*.prompt.md</code></td>
+              <td class="px-4 py-3.5"><code class="text-purple-300 text-xs">*/SKILL.md</code></td>
+              <td class="px-4 py-3.5 text-slate-400 text-xs">UI config</td>
+            </tr>
+            <tr class="bg-slate-900/50 hover:bg-slate-800/40 transition-colors">
+              <td class="px-5 py-3.5 text-slate-400 font-medium text-xs">Activation</td>
+              <td class="px-4 py-3.5"><span class="badge-green rounded px-2 py-0.5 text-xs">Always Active</span></td>
+              <td class="px-4 py-3.5"><span class="badge-blue rounded px-2 py-0.5 text-xs">File Match</span></td>
+              <td class="px-4 py-3.5"><span class="badge-yellow rounded px-2 py-0.5 text-xs">Manual (/name)</span></td>
+              <td class="px-4 py-3.5"><span class="badge-purple rounded px-2 py-0.5 text-xs">Semantic Match</span></td>
+              <td class="px-4 py-3.5"><span class="badge-orange rounded px-2 py-0.5 text-xs">Explicit Select</span></td>
+            </tr>
+            <tr class="bg-slate-900 hover:bg-slate-800/40 transition-colors">
+              <td class="px-5 py-3.5 text-slate-400 font-medium text-xs">Scope</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">All files in repo</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Matching paths only</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Current task</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Relevant workflows</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Entire session</td>
+            </tr>
+            <tr class="bg-slate-900/50 hover:bg-slate-800/40 transition-colors">
+              <td class="px-5 py-3.5 text-slate-400 font-medium text-xs">Can Include</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Text only</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Text only</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Text + variables</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Text + scripts + files</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Config + skills</td>
+            </tr>
+            <tr class="bg-slate-900 hover:bg-slate-800/40 transition-colors">
+              <td class="px-5 py-3.5 text-slate-400 font-medium text-xs">Best For</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Universal standards</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Area-specific rules</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Repeated templates</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Complex workflows</td>
+              <td class="px-4 py-3.5 text-slate-300 text-xs">Persistent personas</td>
+            </tr>
+            <tr class="bg-slate-900/50 hover:bg-slate-800/40 transition-colors">
+              <td class="px-5 py-3.5 text-slate-400 font-medium text-xs">Team Sharing</td>
+              <td class="px-4 py-3.5"><span class="text-brand-400 text-xs font-medium">✅ Version control</span></td>
+              <td class="px-4 py-3.5"><span class="text-brand-400 text-xs font-medium">✅ Version control</span></td>
+              <td class="px-4 py-3.5"><span class="text-brand-400 text-xs font-medium">✅ Version control</span></td>
+              <td class="px-4 py-3.5"><span class="text-brand-400 text-xs font-medium">✅ Version control</span></td>
+              <td class="px-4 py-3.5"><span class="text-yellow-400 text-xs font-medium">⚠️ Export/import</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ─── DECISION MATRIX ───────────────────────────────────────────── -->
+    <section id="matrix">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-white">Final Decision Matrix</h2>
+          <p class="text-slate-400 text-sm">Ask yourself these questions</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="divide-y divide-slate-800">
+          <div class="grid grid-cols-12 gap-4 px-6 py-3 bg-slate-800/60">
+            <div class="col-span-6 text-slate-400 text-xs font-semibold uppercase tracking-wide">Question</div>
+            <div class="col-span-3 text-brand-400 text-xs font-semibold uppercase tracking-wide">Yes → Use This</div>
+            <div class="col-span-3 text-slate-500 text-xs font-semibold uppercase tracking-wide">No → Consider This</div>
+          </div>
+          <div class="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-slate-800/30 transition-colors">
+            <div class="col-span-6 text-slate-300 text-sm">Does it apply to <span class="text-white font-medium">EVERY</span> file/interaction?</div>
+            <div class="col-span-3"><code class="text-brand-300 text-xs">copilot-instructions.md</code></div>
+            <div class="col-span-3 text-slate-500 text-xs">→ Next question</div>
+          </div>
+          <div class="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-slate-800/30 transition-colors">
+            <div class="col-span-6 text-slate-300 text-sm">Does it apply only to <span class="text-white font-medium">specific file types/paths</span>?</div>
+            <div class="col-span-3"><code class="text-blue-300 text-xs">*.instructions.md</code> + applyTo</div>
+            <div class="col-span-3 text-slate-500 text-xs">→ Next question</div>
+          </div>
+          <div class="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-slate-800/30 transition-colors">
+            <div class="col-span-6 text-slate-300 text-sm">Will I <span class="text-white font-medium">invoke it repeatedly</span> as a command?</div>
+            <div class="col-span-3"><code class="text-yellow-300 text-xs">*.prompt.md</code> as /command</div>
+            <div class="col-span-3 text-slate-500 text-xs">→ Next question</div>
+          </div>
+          <div class="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-slate-800/30 transition-colors">
+            <div class="col-span-6 text-slate-300 text-sm">Does it need <span class="text-white font-medium">scripts or bundled resources</span>?</div>
+            <div class="col-span-3"><code class="text-purple-300 text-xs">SKILL.md</code> + resources</div>
+            <div class="col-span-3 text-slate-500 text-xs">→ Next question</div>
+          </div>
+          <div class="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-slate-800/30 transition-colors">
+            <div class="col-span-6 text-slate-300 text-sm">Is it a <span class="text-white font-medium">multi-step complex workflow</span>?</div>
+            <div class="col-span-3"><code class="text-purple-300 text-xs">SKILL.md</code></div>
+            <div class="col-span-3 text-slate-500 text-xs">→ Next question</div>
+          </div>
+          <div class="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-slate-800/30 transition-colors">
+            <div class="col-span-6 text-slate-300 text-sm">Do I want a <span class="text-white font-medium">persistent persona</span> for the session?</div>
+            <div class="col-span-3"><span class="text-orange-300 text-xs font-medium">Custom Agent</span></div>
+            <div class="col-span-3 text-slate-500 text-xs">Use simpler option above</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── QUICK REFERENCE ───────────────────────────────────────────── -->
+    <section id="cheatsheet">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-slate-700 border border-slate-600 flex items-center justify-center">
+          <svg class="w-5 h-5 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-white">Quick Reference Cheat Sheet</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="bg-slate-900 border border-brand-800/40 rounded-2xl p-5">
+          <div class="w-8 h-8 rounded-lg bg-brand-500/10 border border-brand-500/20 flex items-center justify-center mb-3">
+            <svg class="w-4 h-4 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <p class="text-brand-400 font-bold text-sm mb-1">Always On</p>
+          <code class="text-brand-300 text-xs block mb-2">.github/copilot-instructions.md</code>
+          <p class="text-slate-500 text-xs">Universal standards, tech stack, response style</p>
+        </div>
+
+        <div class="bg-slate-900 border border-blue-800/40 rounded-2xl p-5">
+          <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-3">
+            <svg class="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <p class="text-blue-400 font-bold text-sm mb-1">File-Specific</p>
+          <code class="text-blue-300 text-xs block mb-2">.github/instructions/*.instructions.md</code>
+          <p class="text-slate-500 text-xs">Language rules, area conventions, test patterns</p>
+        </div>
+
+        <div class="bg-slate-900 border border-yellow-800/40 rounded-2xl p-5">
+          <div class="w-8 h-8 rounded-lg bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-3">
+            <svg class="w-4 h-4 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <p class="text-yellow-400 font-bold text-sm mb-1">On Command</p>
+          <code class="text-yellow-300 text-xs block mb-2">.github/prompts/*.prompt.md</code>
+          <p class="text-slate-500 text-xs">Scaffolding, reviews, doc generation</p>
+        </div>
+
+        <div class="bg-slate-900 border border-purple-800/40 rounded-2xl p-5">
+          <div class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-3">
+            <svg class="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <p class="text-purple-400 font-bold text-sm mb-1">Smart Workflows</p>
+          <code class="text-purple-300 text-xs block mb-2">.github/skills/*/SKILL.md</code>
+          <p class="text-slate-500 text-xs">CI/CD, security, complex processes</p>
+        </div>
+
+        <div class="bg-slate-900 border border-orange-800/40 rounded-2xl p-5">
+          <div class="w-8 h-8 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-3">
+            <svg class="w-4 h-4 text-orange-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+          </div>
+          <p class="text-orange-400 font-bold text-sm mb-1">Personas</p>
+          <code class="text-orange-300 text-xs block mb-2">Custom Agents (UI)</code>
+          <p class="text-slate-500 text-xs">Frontend Expert, Bug Hunter, roles</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
+  <footer class="border-t border-slate-800 mt-24 py-10 text-center">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex items-center justify-center gap-2 mb-2">
+        <svg class="w-5 h-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <span class="text-white font-semibold text-sm">GitHub Copilot Customization Guide</span>
+      </div>
+      <p class="text-slate-500 text-xs">Instructions · Prompts · Skills · Agents</p>
+      <p class="text-slate-500 text-xs mt-2">Made by <a href="https://www.remsey.nl" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-400 transition-colors">Remsey Mailjard</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>
