@@ -183,17 +183,3 @@ See [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for
 the Rabobank-specific standards used throughout the labs.
 
 ---
-
-## Relationship to the React/Spring Boot Starter
-
-This project covers the **same Copilot lab exercises** as the
-`../starter-project/` folder (React + TypeScript frontend) but as a purely
-vanilla HTML/CSS/JS project — no installation required.
-
-| React starter | This project |
-|---------------|-------------|
-| `CaseList.tsx` | `js/components/case-list.js` |
-| `CaseDetail.tsx` | `js/components/case-detail.js` |
-| `useCases.ts` | `js/api.js` + `js/state.js` |
-| `formatters.ts` | `js/utils/formatters.js` |
-| `types/index.ts` | Documented in this README |
