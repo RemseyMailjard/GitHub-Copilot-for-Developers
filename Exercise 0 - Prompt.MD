@@ -28,7 +28,7 @@ This functionality must be reliable and production-ready.
 Open GitHub Copilot Chat (or any AI coding assistant) and enter:
 
 
-Create a JavaScript function to validate an IBAN
+Create a Java method to validate an IBAN
 
 
 ### 👉 Observe the output
@@ -50,7 +50,7 @@ Use the prompt below:
 
 Act as a senior backend developer.
 
-Create a JavaScript function to validate IBAN numbers.
+Create a Java method to validate IBAN numbers.
 
 Requirements:
 
@@ -108,7 +108,7 @@ Try adding:
 - Country-specific IBAN validation rules  
 - Error messages instead of just true/false  
 - Logging for invalid cases  
-- Unit test structure (e.g., Jest)  
+- Unit test structure (e.g., JUnit 5)  
 
 ---
 
