@@ -163,7 +163,7 @@ The compliance team needs a report: **count the number of fraud cases per status
 ### Prompt
 
 ```
-Act as a senior Java developer at Rabobank.
+Act as a senior Java developer at Rabobank. Test
 
 Add a JPQL query to CaseRepository for a compliance report.
 
