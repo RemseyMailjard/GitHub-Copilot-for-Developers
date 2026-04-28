@@ -143,7 +143,7 @@
             </div>
             <div class="pb-6 flex-1">
               <p class="text-slate-300 font-medium mb-1">Should it apply only to <span class="text-white font-semibold">SPECIFIC</span> file types or directories?</p>
-              <p class="text-slate-500 text-sm mb-3">Think: Python rules for .py files, React conventions for components/</p>
+              <p class="text-slate-500 text-sm mb-3">Think: Kotlin rules for .kt files, Java rules for .java files, Gradle conventions for build.gradle.kts</p>
               <div class="flex items-start gap-2">
                 <span class="badge-blue rounded px-2 py-0.5 text-xs font-medium flex-shrink-0 mt-0.5">YES →</span>
                 <div>
@@ -164,7 +164,7 @@
             </div>
             <div class="pb-6 flex-1">
               <p class="text-slate-300 font-medium mb-1">Is it a <span class="text-white font-semibold">REUSABLE</span> task you'll invoke manually?</p>
-              <p class="text-slate-500 text-sm mb-3">Think: scaffolding components, generating tests, code reviews</p>
+              <p class="text-slate-500 text-sm mb-3">Think: scaffolding REST endpoints, generating service tests, code reviews</p>
               <div class="flex items-start gap-2">
                 <span class="badge-yellow rounded px-2 py-0.5 text-xs font-medium flex-shrink-0 mt-0.5">YES →</span>
                 <div>
@@ -205,7 +205,7 @@
             </div>
             <div class="flex-1">
               <p class="text-slate-300 font-medium mb-1">Is it a <span class="text-white font-semibold">PERSISTENT</span> persona for specific workflows?</p>
-              <p class="text-slate-500 text-sm mb-3">Think: "Frontend Expert", "Security Reviewer", "Bug Hunter"</p>
+              <p class="text-slate-500 text-sm mb-3">Think: "Backend Expert", "Security Reviewer", "Incident Debugger"</p>
               <div class="flex items-start gap-2">
                 <span class="badge-orange rounded px-2 py-0.5 text-xs font-medium flex-shrink-0 mt-0.5">YES →</span>
                 <div>
@@ -274,8 +274,8 @@
         </div>
         <span class="badge-orange rounded-full px-2 py-0.5 text-xs font-medium">Explicit Select</span>
         <h3 class="text-white font-bold text-lg mt-3 mb-1">Custom Agents</h3>
-        <p class="text-slate-400 text-sm"><code class="text-orange-300">UI Configuration</code></p>
-        <p class="text-slate-500 text-xs mt-2">Frontend Expert, Bug Hunter — persistent personas for entire sessions</p>
+        <p class="text-slate-400 text-sm"><code class="text-orange-300">Agent Configuration</code></p>
+        <p class="text-slate-500 text-xs mt-2">Backend Expert, Incident Debugger — persistent personas for entire sessions</p>
       </a>
 
       <!-- Card Tip -->
@@ -284,7 +284,7 @@
           <svg class="w-5 h-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         </div>
         <h3 class="text-white font-bold text-lg mb-2">Pro Tip</h3>
-        <p class="text-slate-400 text-sm">Path-specific instructions <span class="text-white font-medium">combine</span> with repository-wide instructions. Editing <code class="text-brand-300 text-xs">Button.tsx</code>? Both <code class="text-brand-300 text-xs">copilot-instructions.md</code> <em>and</em> <code class="text-brand-300 text-xs">react.instructions.md</code> are loaded together.</p>
+        <p class="text-slate-400 text-sm">Path-specific instructions <span class="text-white font-medium">combine</span> with repository-wide instructions. Editing <code class="text-brand-300 text-xs">PaymentOrchestrator.kt</code>? Both <code class="text-brand-300 text-xs">copilot-instructions.md</code> <em>and</em> <code class="text-brand-300 text-xs">kotlin-service.instructions.md</code> are loaded together.</p>
       </div>
     </div>
 
@@ -370,37 +370,40 @@
       <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
         <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
           <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
-          <span class="text-slate-400 text-xs font-mono ml-2">.github/copilot-instructions.md — E-commerce Platform Example</span>
+          <span class="text-slate-400 text-xs font-mono ml-2">.github/copilot-instructions.md — Banking Backend Platform Example</span>
         </div>
         <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-slate-500"># .github/copilot-instructions.md</span>
 
 <span class="text-brand-400"># Project Overview</span>
-Multi-tenant e-commerce platform built with Next.js, TypeScript, and Prisma.
-Microservices architecture: API Gateway → Services → PostgreSQL.
+Backend services platform for payments, customer onboarding, and transaction processing.
+Microservices architecture: API Gateway → Spring Boot services → Kafka → PostgreSQL.
+Handles payment orchestration, account validation, ledger integration, and audit trails.
 
 <span class="text-brand-400"># Tech Stack</span>
-<span class="text-blue-300">- Frontend:</span> Next.js 14, React 18, Tailwind CSS
-<span class="text-blue-300">- Backend:</span>  Node.js, Express, Prisma ORM
+<span class="text-blue-300">- Languages:</span> Java 21, Kotlin 2.x
+<span class="text-blue-300">- Framework:</span> Spring Boot 3, Spring MVC, Spring Data JPA
+<span class="text-blue-300">- Build:</span> Gradle with Kotlin DSL
+<span class="text-blue-300">- Messaging:</span> Kafka
 <span class="text-blue-300">- Database:</span> PostgreSQL 15
-<span class="text-blue-300">- Testing:</span>  Jest, React Testing Library, Playwright
+<span class="text-blue-300">- Testing:</span> JUnit 5, MockK/Mockito, Testcontainers
 
 <span class="text-brand-400"># Universal Coding Standards</span>
-- Use TypeScript strict mode
-- All functions must have JSDoc comments
-- Prefer async/await over promises
-- Use early returns for error handling
-- Follow Airbnb style guide
+- Prefer constructor injection; never use field injection
+- Keep controllers thin and move business logic into services/use cases
+- Use immutable DTOs and explicit validation annotations
+- Prefer Kotlin data classes and null-safety in .kt files
+- Never log sensitive financial data (IBAN, account IDs, balances, tokens)
 
 <span class="text-brand-400"># Build Commands</span>
-- Development: <span class="text-yellow-300">`npm run dev`</span>
-- Build:       <span class="text-yellow-300">`npm run build`</span>
-- Test:        <span class="text-yellow-300">`npm test`</span>
-- Lint:        <span class="text-yellow-300">`npm run lint`</span>
+- Development: <span class="text-yellow-300">`./gradlew bootRun`</span>
+- Build:       <span class="text-yellow-300">`./gradlew build`</span>
+- Test:        <span class="text-yellow-300">`./gradlew test`</span>
+- Verify:      <span class="text-yellow-300">`./gradlew check`</span>
 
 <span class="text-brand-400"># Response Preferences</span>
 - Keep responses concise (under 10 lines when possible)
-- Show code examples before explanations
-- Use TypeScript, not JavaScript</code></pre>
+- Show Kotlin examples for <span class="text-yellow-300">.kt</span> files and Java examples for <span class="text-yellow-300">.java</span> files
+- Prefer Gradle Kotlin DSL snippets over Maven XML</code></pre>
       </div>
     </section>
 
@@ -422,18 +425,18 @@ Microservices architecture: API Gateway → Services → PostgreSQL.
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <p class="text-blue-400 text-xs font-medium mb-1">Language-Specific</p>
-          <p class="text-white text-sm font-medium">Python vs TypeScript</p>
-          <p class="text-slate-500 text-xs mt-1">Separate instruction files per language</p>
+          <p class="text-white text-sm font-medium">Java services vs Kotlin services</p>
+          <p class="text-slate-500 text-xs mt-1">Separate instruction files per area</p>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <p class="text-blue-400 text-xs font-medium mb-1">Frontend vs Backend</p>
-          <p class="text-white text-sm font-medium">API vs UI patterns</p>
-          <p class="text-slate-500 text-xs mt-1">src/api/ vs src/components/</p>
+          <p class="text-blue-400 text-xs font-medium mb-1">Application Layers</p>
+          <p class="text-white text-sm font-medium">API vs domain vs persistence</p>
+          <p class="text-slate-500 text-xs mt-1">controller/ vs service/ vs repository/</p>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <p class="text-blue-400 text-xs font-medium mb-1">Testing</p>
-          <p class="text-white text-sm font-medium">**/*.test.* files</p>
-          <p class="text-slate-500 text-xs mt-1">RTL assertions, test patterns</p>
+          <p class="text-white text-sm font-medium">**/*Test.java and **/*Test.kt</p>
+          <p class="text-slate-500 text-xs mt-1">JUnit 5, Testcontainers, service and controller tests</p>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <p class="text-blue-400 text-xs font-medium mb-1">Legacy Code</p>
@@ -445,45 +448,58 @@ Microservices architecture: API Gateway → Services → PostgreSQL.
       <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
         <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
           <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
-          <span class="text-slate-400 text-xs font-mono ml-2">Monorepo examples — react + python + testing</span>
+              <span class="text-slate-400 text-xs font-mono ml-2">Banking platform — Java, Kotlin, and Gradle examples</span>
         </div>
-        <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-slate-500"># .github/instructions/react.instructions.md</span>
+            <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-slate-500"># .github/instructions/kotlin-service.instructions.md</span>
 <span class="text-purple-300">---
-applyTo: "src/components/**/*.tsx,src/pages/**/*.tsx"
+        applyTo: "src/main/kotlin/**/*.kt"
 ---</span>
 
-<span class="text-brand-400"># React Component Guidelines</span>
-- Use functional components with hooks (no class components)
-- Prop types with TypeScript interfaces
-- Tailwind for styling (no CSS modules)
-- <span class="text-blue-300">React.memo</span> for performance-sensitive components
-- Accessibility: all interactive elements need aria-labels
+        <span class="text-brand-400"># Kotlin Service Guidelines</span>
+        - Prefer data classes and sealed interfaces for DTOs and result types
+        - Keep nullability explicit; avoid <span class="text-blue-300">!!</span> unless there is a hard invariant
+        - Use constructor injection and keep Spring annotations minimal
+        - Keep controllers orchestration-only; business rules stay in services
+        - Never expose or log raw financial identifiers or tokens
 
 
-<span class="text-slate-500"># .github/instructions/python-api.instructions.md</span>
+        <span class="text-slate-500"># .github/instructions/java-service.instructions.md</span>
 <span class="text-purple-300">---
-applyTo: "services/api/**/*.py"
+        applyTo: "src/main/java/**/*.java"
 ---</span>
 
-<span class="text-brand-400"># Python API Guidelines</span>
-- FastAPI for all endpoints
-- Pydantic models for request/response validation
-- <span class="text-blue-300">async def</span> for all routes
-- Dependency injection for database connections
-- OpenAPI documentation with detailed descriptions
+        <span class="text-brand-400"># Java Service Guidelines</span>
+        - Use Spring Boot for controllers, services, and scheduled jobs
+        - Prefer records for simple request/response DTOs when appropriate
+        - Use Bean Validation annotations for request validation
+        - Isolate mapping logic; do not mix persistence entities with API contracts
+        - Document public endpoints with OpenAPI annotations when the service exposes REST APIs
+
+
+        <span class="text-slate-500"># .github/instructions/gradle.instructions.md</span>
+        <span class="text-purple-300">---
+        applyTo: "build.gradle.kts,settings.gradle.kts,gradle.properties,gradle/libs.versions.toml"
+        ---</span>
+
+        <span class="text-brand-400"># Gradle Build Guidelines</span>
+        - Prefer Kotlin DSL for new build logic
+        - Keep dependency versions centralized in version catalogs where available
+        - Use custom Gradle tasks for repeatable developer workflows
+        - Avoid plugin sprawl; justify each plugin with a concrete need
+        - Keep CI commands aligned with <span class="text-yellow-300">./gradlew clean build test check</span>
 
 
 <span class="text-slate-500"># .github/instructions/testing.instructions.md</span>
 <span class="text-purple-300">---
-applyTo: "**/__tests__/**/*.ts,**/*.test.tsx,**/*.spec.py"
+        applyTo: "src/test/java/**/*.java,src/test/kotlin/**/*.kt,**/*Test.java,**/*Test.kt"
 ---</span>
 
 <span class="text-brand-400"># Testing Standards</span>
-- Use React Testing Library (no Enzyme)
-- Prefer <span class="text-yellow-300">data-testid</span> over class selectors
-- Mock external services and APIs
-- Test user-visible behavior, not implementation
-- Each test should be independent</code></pre>
+        - Use JUnit 5 for test orchestration
+        - Prefer MockK for Kotlin and Mockito for Java where mocking is needed
+        - Use Testcontainers for database and Kafka integration tests
+        - Test observable business behavior, not framework internals
+        - Each test should be deterministic and independent</code></pre>
       </div>
     </section>
 
@@ -504,14 +520,14 @@ applyTo: "**/__tests__/**/*.ts,**/*.test.tsx,**/*.spec.py"
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <code class="text-yellow-300 text-xs">/new-component</code>
-          <p class="text-white text-sm font-medium mt-1">Component Scaffolding</p>
-          <p class="text-slate-500 text-xs mt-1">React components with tests, consistent structure</p>
+          <code class="text-yellow-300 text-xs">/new-api-endpoint</code>
+          <p class="text-white text-sm font-medium mt-1">Endpoint Scaffolding</p>
+          <p class="text-slate-500 text-xs mt-1">Controllers, services, DTOs, and tests with consistent structure</p>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <code class="text-yellow-300 text-xs">/security-review</code>
           <p class="text-white text-sm font-medium mt-1">Code Reviews</p>
-          <p class="text-slate-500 text-xs mt-1">Security/performance review checklist</p>
+          <p class="text-slate-500 text-xs mt-1">Security, logging, and data exposure review checklist</p>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <code class="text-yellow-300 text-xs">/generate-docs</code>
@@ -521,7 +537,7 @@ applyTo: "**/__tests__/**/*.ts,**/*.test.tsx,**/*.spec.py"
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <code class="text-yellow-300 text-xs">/create-tests</code>
           <p class="text-white text-sm font-medium mt-1">Test Generation</p>
-          <p class="text-slate-500 text-xs mt-1">Unit tests with arrange-act-assert pattern</p>
+          <p class="text-slate-500 text-xs mt-1">JUnit 5 service and controller tests with clear fixtures</p>
         </div>
       </div>
 
@@ -529,32 +545,34 @@ applyTo: "**/__tests__/**/*.ts,**/*.test.tsx,**/*.spec.py"
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
           <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
             <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
-            <span class="text-slate-400 text-xs font-mono ml-2">new-react-component.prompt.md</span>
+            <span class="text-slate-400 text-xs font-mono ml-2">new-api-endpoint.prompt.md</span>
           </div>
           <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-purple-300">---
 agent: 'agent'
           model: GPT-5.2
-description: 'Generate a new React component with tests'
+description: 'Generate a new Spring Boot endpoint with tests'
 ---</span>
 
-<span class="text-brand-400"># Create React Component</span>
-Generate a new React component:
+<span class="text-brand-400"># Create Banking API Endpoint</span>
+Generate a new backend endpoint for the banking platform:
 
-<span class="text-blue-300">Component Name:</span> <span class="text-yellow-300">${input:componentName:Enter component name}</span>
-<span class="text-blue-300">Component Type:</span> <span class="text-yellow-300">${input:componentType:atom/molecule/organism}</span>
+<span class="text-blue-300">Language:</span> <span class="text-yellow-300">${input:language:kotlin or java}</span>
+<span class="text-blue-300">Feature Name:</span> <span class="text-yellow-300">${input:featureName:e.g. PaymentLimit, AccountStatus}</span>
+<span class="text-blue-300">File Extension:</span> <span class="text-yellow-300">${input:fileExtension:kt or java}</span>
 
 <span class="text-brand-400">Requirements:</span>
-1. Create in <span class="text-yellow-300">src/components/${input:componentType}s/</span>
-2. TypeScript with strict typing
-3. Props interface
-4. JSDoc comments
-5. Create test file with RTL
-6. Include Storybook story
+1. Create controller, service, request/response DTOs, and tests in the correct <span class="text-yellow-300">src/main</span> and <span class="text-yellow-300">src/test</span> folders
+2. Use Spring Boot conventions with constructor injection only
+3. Validate input with Bean Validation annotations
+4. Do not expose or log IBANs, account IDs, balances, or tokens
+5. Add JUnit 5 tests and use MockK or Mockito depending on the language
+6. Include Gradle task notes for running the new tests locally
 
 <span class="text-brand-400">Files to create:</span>
-- <span class="text-yellow-300">${input:componentName}.tsx</span>
-- <span class="text-yellow-300">${input:componentName}.test.tsx</span>
-- <span class="text-yellow-300">${input:componentName}.stories.tsx</span></code></pre>
+- <span class="text-yellow-300">${input:featureName}Controller.${input:fileExtension}</span>
+- <span class="text-yellow-300">${input:featureName}Service.${input:fileExtension}</span>
+- <span class="text-yellow-300">${input:featureName}Request.${input:fileExtension}</span>
+- <span class="text-yellow-300">${input:featureName}ControllerTest.${input:fileExtension}</span></code></pre>
         </div>
 
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
@@ -571,23 +589,28 @@ description: 'Security review for API endpoints'
 Review the selected API code for vulnerabilities:
 
 <span class="text-red-400">1. Authentication/Authorization</span>
-   - Proper token validation
-   - Role-based access control
-   - Session management
+  - OAuth 2.0 / OIDC token validation
+  - Role-based access control (customer vs. employee vs. batch)
+  - Service-to-service trust boundaries and token propagation
 
 <span class="text-red-400">2. Input Validation</span>
-   - SQL injection risks
-   - XSS vulnerabilities
-   - Command injection
+  - Bean Validation coverage and missing constraints
+  - Unsafe deserialization or mass assignment risks
+  - IBAN, account number, and payment reference validation
 
 <span class="text-red-400">3. Data Exposure</span>
-   - Sensitive data in responses
+  - PII and financial data (IBAN, balance) in responses and logs
    - Error message information leakage
-   - Logging of secrets
+  - Accidental logging of transaction amounts, account IDs, or tokens
 
 <span class="text-red-400">4. Rate Limiting</span>
-   - Endpoint protection
-   - DDoS mitigation
+   - Payment endpoint protection
+  - Brute-force, replay, and enumeration mitigation
+
+<span class="text-red-400">5. Backend-Specific Risks</span>
+  - Missing idempotency handling for payments
+  - Transaction boundary issues and inconsistent retries
+  - SSRF or unsafe outbound calls to downstream services
 
 Provide line numbers and remediation steps.</code></pre>
         </div>
@@ -595,7 +618,7 @@ Provide line numbers and remediation steps.</code></pre>
 
       <div class="mt-4 bg-yellow-900/20 border border-yellow-800/40 rounded-xl p-4 flex gap-3">
         <svg class="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <p class="text-yellow-200 text-sm">In Copilot Chat, type <code class="bg-slate-800 px-1.5 py-0.5 rounded text-yellow-300">/new-react-component</code> and you'll be prompted for the component name and type. The prompt file guides Copilot to generate everything according to your standards.</p>
+      <p class="text-yellow-200 text-sm">In Copilot Chat, type <code class="bg-slate-800 px-1.5 py-0.5 rounded text-yellow-300">/new-api-endpoint</code> and you'll be prompted for the language and feature name. The prompt file guides Copilot to generate controller, service, DTO, and test files according to your backend standards.</p>
       </div>
     </section>
 
@@ -616,9 +639,9 @@ Provide line numbers and remediation steps.</code></pre>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <p class="text-purple-400 text-xs font-medium mb-1">CI/CD Debugging</p>
-          <p class="text-white text-sm font-medium">github-actions-debugging</p>
-          <p class="text-slate-500 text-xs mt-1">Multi-step log analysis and fixes</p>
+          <p class="text-purple-400 text-xs font-medium mb-1">Build Debugging</p>
+          <p class="text-white text-sm font-medium">gradle-build-debugging</p>
+          <p class="text-slate-500 text-xs mt-1">Gradle task failures, dependency conflicts, and fixes</p>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <p class="text-purple-400 text-xs font-medium mb-1">Database Migrations</p>
@@ -633,7 +656,7 @@ Provide line numbers and remediation steps.</code></pre>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <p class="text-purple-400 text-xs font-medium mb-1">Security</p>
           <p class="text-white text-sm font-medium">security-audit</p>
-          <p class="text-slate-500 text-xs mt-1">Scanning tools, vulnerability databases</p>
+          <p class="text-slate-500 text-xs mt-1">Scanning tools, PCI compliance references</p>
         </div>
       </div>
 
@@ -641,45 +664,45 @@ Provide line numbers and remediation steps.</code></pre>
         <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
           <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
             <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
-            <span class="text-slate-400 text-xs font-mono ml-2">.github/skills/github-actions-debugging/SKILL.md</span>
+            <span class="text-slate-400 text-xs font-mono ml-2">.github/skills/gradle-build-debugging/SKILL.md</span>
           </div>
-          <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-purple-300">---
-name: github-actions-debugging
-description: Debug failing GitHub Actions workflows. Use when
-  CI/CD fails, builds break, or Actions need troubleshooting.
----</span>
+           <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-purple-300">---
+    name: gradle-build-debugging
+    description: Debug failing Gradle builds for Java and Kotlin services. Use when
+      CI/CD fails, builds break, dependency resolution loops, or tests do not start.
+    ---</span>
 
 <span class="text-brand-400"># Debugging Process</span>
 
 <span class="text-blue-300">1. Identify the failure</span>
-   - Check workflow run status
-   - Identify failed job and step
-   - Review error messages
+      - Check the failing Gradle task
+      - Identify whether the issue is compile, test, dependency, or plugin related
+      - Review stack traces and the first meaningful error
 
 <span class="text-blue-300">2. Analyze logs</span>
-   - Use <span class="text-yellow-300">scripts/extract-error.sh</span> to parse logs
-   - Check <span class="text-yellow-300">references/common-errors.md</span>
-   - Check environment variables and secrets
+      - Use <span class="text-yellow-300">scripts/collect-gradle-scan.sh</span> to capture task output
+      - Check <span class="text-yellow-300">references/common-gradle-errors.md</span>
+      - Inspect Java version, Gradle wrapper version, and dependency lock state
 
 <span class="text-blue-300">3. Common Issues &amp; Fixes</span>
    
-   Issue: Missing dependencies
-   - Check package.json/requirements.txt changes
-   - Run <span class="text-yellow-300">`scripts/validate-deps.sh`</span>
+      Issue: Dependency conflict
+      - Check version catalog and transitive dependency trees
+      - Run <span class="text-yellow-300">`./gradlew dependencies`</span>
 
-   Issue: Permission errors
-   - Check GITHUB_TOKEN permissions
-   - Use <span class="text-yellow-300">`scripts/check-permissions.sh`</span>
+      Issue: Test failures in CI only
+      - Check containerized test assumptions and port collisions
+      - Use <span class="text-yellow-300">`./gradlew test --info`</span>
 
 <span class="text-blue-300">4. Fix and validate</span>
-   - Apply fix locally first
-   - Test with act (GitHub Actions local runner)
-   - Push and monitor workflow
+      - Apply fix locally first
+      - Re-run the failing task in isolation
+      - Run <span class="text-yellow-300">`./gradlew clean build`</span> before pushing
 
 <span class="text-brand-400"># Available Resources</span>
-- <span class="text-yellow-300">scripts/extract-error.sh</span>    - Parse workflow logs
-- <span class="text-yellow-300">scripts/check-permissions.sh</span> - Validate token perms
-- <span class="text-yellow-300">references/common-errors.md</span>  - Known issues</code></pre>
+    - <span class="text-yellow-300">scripts/collect-gradle-scan.sh</span>   - Capture build diagnostics
+    - <span class="text-yellow-300">scripts/verify-wrapper.sh</span>        - Validate wrapper and Java version
+    - <span class="text-yellow-300">references/common-gradle-errors.md</span> - Known issues</code></pre>
         </div>
 
         <div class="space-y-4">
@@ -689,18 +712,18 @@ description: Debug failing GitHub Actions workflows. Use when
               Directory Structure
             </h4>
             <pre class="text-xs font-mono text-slate-400 leading-relaxed tree-line"><code>.github/skills/
-└── github-actions-debugging/
+      └── gradle-build-debugging/
     ├── <span class="text-white">SKILL.md</span>
     ├── scripts/
-    │   ├── extract-error.sh
-    │   ├── check-permissions.sh
-    │   └── validate-deps.sh
+        │   ├── collect-gradle-scan.sh
+        │   ├── verify-wrapper.sh
+        │   └── dependency-tree.sh
     ├── references/
-    │   ├── common-errors.md
-    │   ├── workflow-patterns.md
+        │   ├── common-gradle-errors.md
+        │   ├── build-patterns.md
     │   └── test-data/
     └── examples/
-        └── fixed-workflow.yml</code></pre>
+          └── fixed-build.gradle.kts</code></pre>
           </div>
           <div class="bg-purple-900/20 border border-purple-800/40 rounded-xl p-4">
             <h4 class="text-purple-300 font-semibold text-sm mb-2">How it activates</h4>
@@ -742,22 +765,22 @@ description: Debug failing GitHub Actions workflows. Use when
           <div class="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center mb-2">
             <svg class="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
           </div>
-          <p class="text-white text-sm font-medium">Frontend Expert</p>
-          <p class="text-slate-500 text-xs mt-1">React/TypeScript/Accessibility specialist</p>
+          <p class="text-white text-sm font-medium">Backend Expert</p>
+          <p class="text-slate-500 text-xs mt-1">Java/Kotlin and Gradle specialist for banking services</p>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <div class="w-8 h-8 rounded-full bg-red-500/20 border border-red-500/30 flex items-center justify-center mb-2">
             <svg class="w-4 h-4 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
           <p class="text-white text-sm font-medium">Bug Hunter</p>
-          <p class="text-slate-500 text-xs mt-1">Quality and edge case focus</p>
+          <p class="text-slate-500 text-xs mt-1">Retries, concurrency, and payment orchestration bugs</p>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <div class="w-8 h-8 rounded-full bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center mb-2">
             <svg class="w-4 h-4 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
           <p class="text-white text-sm font-medium">Security Reviewer</p>
-          <p class="text-slate-500 text-xs mt-1">Security-focused code examination</p>
+          <p class="text-slate-500 text-xs mt-1">Financial data security &amp; compliance checks</p>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <div class="w-8 h-8 rounded-full bg-brand-500/20 border border-brand-500/30 flex items-center justify-center mb-2">
@@ -771,33 +794,33 @@ description: Debug failing GitHub Actions workflows. Use when
       <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
         <div class="flex items-center gap-2 px-5 py-3 bg-slate-800/60 border-b border-slate-700">
           <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/70"></div><div class="w-3 h-3 rounded-full bg-yellow-500/70"></div><div class="w-3 h-3 rounded-full bg-green-500/70"></div></div>
-          <span class="text-slate-400 text-xs font-mono ml-2">Frontend Expert — Custom Agent Configuration</span>
+          <span class="text-slate-400 text-xs font-mono ml-2">Backend Expert — Custom Agent Configuration</span>
         </div>
         <pre class="p-5 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-brand-400">## Behavior</span>
-You are a frontend development expert specializing in:
-- React 18+ best practices
-- TypeScript strict mode
-- Web accessibility (WCAG 2.1)
-- Performance optimization
-- Modern CSS (Tailwind/CSS Modules)
+You are a backend development expert for banking applications, specializing in:
+- Java 21, Kotlin 2.x, and Spring Boot 3 services
+- Gradle build logic and dependency management
+- Secure API design, validation, and transactional consistency
+- Kafka-based event processing and resilience patterns
+- Performance tuning for synchronous and asynchronous service flows
 
 <span class="text-brand-400">## Approach</span>
-1. Always consider component reusability
-2. Prioritize accessibility in every suggestion
-3. Optimize for performance (lazy loading, memoization)
-4. Use semantic HTML
-5. Consider mobile-first responsive design
+1. Keep controllers thin and business logic inside services or use cases
+2. Prioritize correctness, observability, and safe failure behavior
+3. Prevent leakage of IBANs, account IDs, balances, and tokens in logs and responses
+4. Prefer idempotent designs for payment and transfer operations
+5. Validate with unit tests and integration tests before proposing larger refactors
 
 <span class="text-brand-400">## When helping with code:</span>
-- Suggest TypeScript interfaces for props
-- Add <span class="text-yellow-300">aria-labels</span> and roles
-- Recommend <span class="text-blue-300">React.memo</span> for heavy components
-- Point out potential accessibility issues
-- Suggest Lighthouse audits for performance
+- Suggest Kotlin for <span class="text-yellow-300">.kt</span> files and Java for <span class="text-yellow-300">.java</span> files
+- Recommend constructor injection, explicit validation, and transaction boundaries
+- Flag missing retry, timeout, circuit breaker, and idempotency handling
+- Add Gradle commands when verification matters
+- Prefer Testcontainers for realistic integration tests
 
 <span class="text-brand-400">## Skills to use:</span>
-- react-component-generator
-- accessibility-checker
+- gradle-build-debugging
+- security-audit
 - performance-analyzer</code></pre>
       </div>
 
@@ -815,7 +838,7 @@ You are a frontend development expert specializing in:
         </div>
         <div>
           <h2 class="text-2xl font-bold text-white">Real-World Complete Setup</h2>
-          <p class="text-slate-400 text-sm">SaaS Platform with Microservices</p>
+          <p class="text-slate-400 text-sm">Banking Backend Monorepo</p>
         </div>
       </div>
 
@@ -829,19 +852,20 @@ You are a frontend development expert specializing in:
 ├── <span class="text-brand-400">copilot-instructions.md</span>    <span class="text-slate-500"># ALWAYS LOADED</span>
 │
 ├── instructions/               <span class="text-slate-500"># CONDITIONAL</span>
-│   ├── <span class="text-blue-300">python-api.instructions.md</span>
-│   ├── <span class="text-blue-300">react-frontend.instructions.md</span>
+│   ├── <span class="text-blue-300">java-service.instructions.md</span>
+│   ├── <span class="text-blue-300">kotlin-service.instructions.md</span>
+│   ├── <span class="text-blue-300">gradle.instructions.md</span>
 │   ├── <span class="text-blue-300">testing.instructions.md</span>
 │   └── <span class="text-blue-300">migrations.instructions.md</span>
 │
 ├── prompts/                    <span class="text-slate-500"># MANUAL /command</span>
 │   ├── <span class="text-yellow-300">new-api-endpoint.prompt.md</span>
-│   ├── <span class="text-yellow-300">new-component.prompt.md</span>
+│   ├── <span class="text-yellow-300">new-event-consumer.prompt.md</span>
 │   ├── <span class="text-yellow-300">generate-migration.prompt.md</span>
 │   └── <span class="text-yellow-300">code-review.prompt.md</span>
 │
 └── skills/                     <span class="text-slate-500"># AUTOMATIC semantic</span>
-    ├── github-actions-debug/
+  ├── gradle-build-debugging/
     │   ├── <span class="text-purple-300">SKILL.md</span>
     │   ├── scripts/
     │   └── references/
@@ -861,7 +885,7 @@ You are a frontend development expert specializing in:
           <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
             <p class="text-white text-sm font-semibold mb-2 flex items-center gap-2">
               <span class="w-5 h-5 rounded bg-brand-500/20 text-brand-400 text-xs flex items-center justify-center font-bold">1</span>
-              Adding New API Endpoint
+              Adding New Payment API Endpoint
             </p>
             <div class="space-y-1">
               <div class="flex items-center gap-2 text-xs text-slate-400">
@@ -870,7 +894,7 @@ You are a frontend development expert specializing in:
               </div>
               <div class="flex items-center gap-2 text-xs text-slate-400">
                 <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <code>python-api.instructions.md</code> (file is .py)
+                <code>kotlin-service.instructions.md</code> or <code>java-service.instructions.md</code> (file is .kt or .java)
               </div>
               <div class="flex items-center gap-2 text-xs text-slate-400">
                 <svg class="w-3.5 h-3.5 text-yellow-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -891,7 +915,7 @@ You are a frontend development expert specializing in:
               </div>
               <div class="flex items-center gap-2 text-xs text-slate-400">
                 <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
-                <code>github-actions-debug</code> skill (semantic match)
+                <code>gradle-build-debugging</code> skill (semantic match)
               </div>
               <div class="flex items-center gap-2 text-xs text-slate-400">
                 <svg class="w-3.5 h-3.5 text-purple-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
@@ -903,7 +927,7 @@ You are a frontend development expert specializing in:
           <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
             <p class="text-white text-sm font-semibold mb-2 flex items-center gap-2">
               <span class="w-5 h-5 rounded bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-bold">3</span>
-              Building React Component
+              Building Payment Orchestration Service
             </p>
             <div class="space-y-1">
               <div class="flex items-center gap-2 text-xs text-slate-400">
@@ -912,11 +936,11 @@ You are a frontend development expert specializing in:
               </div>
               <div class="flex items-center gap-2 text-xs text-slate-400">
                 <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <code>react-frontend.instructions.md</code> (file is .tsx)
+                <code>kotlin-service.instructions.md</code> (file is .kt)
               </div>
               <div class="flex items-center gap-2 text-xs text-slate-400">
                 <svg class="w-3.5 h-3.5 text-orange-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
-                Select "Frontend Expert" agent for session
+                Select "Backend Expert" agent for session
               </div>
             </div>
           </div>
@@ -924,7 +948,7 @@ You are a frontend development expert specializing in:
           <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
             <p class="text-white text-sm font-semibold mb-2 flex items-center gap-2">
               <span class="w-5 h-5 rounded bg-yellow-500/20 text-yellow-400 text-xs flex items-center justify-center font-bold">4</span>
-              Writing Tests
+              Writing Tests for Payment Service
             </p>
             <div class="space-y-1">
               <div class="flex items-center gap-2 text-xs text-slate-400">
@@ -933,11 +957,11 @@ You are a frontend development expert specializing in:
               </div>
               <div class="flex items-center gap-2 text-xs text-slate-400">
                 <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <code>testing.instructions.md</code> (file is .test.tsx)
+                <code>testing.instructions.md</code> (file is *Test.kt or *Test.java)
               </div>
               <div class="flex items-center gap-2 text-xs text-slate-400">
                 <svg class="w-3.5 h-3.5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <code>react-frontend.instructions.md</code> (also .tsx)
+                <code>kotlin-service.instructions.md</code> or <code>java-service.instructions.md</code> (production file under test)
               </div>
             </div>
           </div>
@@ -976,7 +1000,7 @@ You are a frontend development expert specializing in:
               <td class="px-4 py-3.5"><code class="text-blue-300 text-xs">*.instructions.md</code></td>
               <td class="px-4 py-3.5"><code class="text-yellow-300 text-xs">*.prompt.md</code></td>
               <td class="px-4 py-3.5"><code class="text-purple-300 text-xs">*/SKILL.md</code></td>
-              <td class="px-4 py-3.5 text-slate-400 text-xs">UI config</td>
+              <td class="px-4 py-3.5 text-slate-400 text-xs">Agent config</td>
             </tr>
             <tr class="bg-slate-900/50 hover:bg-slate-800/40 transition-colors">
               <td class="px-5 py-3.5 text-slate-400 font-medium text-xs">Activation</td>
@@ -1130,7 +1154,7 @@ You are a frontend development expert specializing in:
           </div>
           <p class="text-orange-400 font-bold text-sm mb-1">Personas</p>
           <code class="text-orange-300 text-xs block mb-2">Custom Agents (UI)</code>
-          <p class="text-slate-500 text-xs">Frontend Expert, Bug Hunter, roles</p>
+          <p class="text-slate-500 text-xs">Backend Expert, Incident Debugger, roles</p>
         </div>
       </div>
     </section>
